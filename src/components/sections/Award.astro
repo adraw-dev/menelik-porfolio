@@ -1,0 +1,94 @@
+---
+// Puente hacia lo audiovisual: la fotografía premiada (3.er puesto, Itagüí 2020).
+import Photo from '../ui/Photo.astro';
+import { P } from '../../data/photos';
+---
+
+<section id="premio" class="award on-dark" data-atmos="night" data-chapter="Premio" aria-labelledby="award-title" data-award>
+  <div class="award__glow" aria-hidden="true" data-award-glow></div>
+  <div class="wrap award__grid">
+    <div class="award__photo">
+      <Photo photo={P.premio} lightbox="premio" sizes="(min-width: 1024px) 26vw, 72vw" widths={[420, 640, 841]} caption="Fotografía premiada · 2020" />
+    </div>
+    <div class="award__text">
+      <p class="eyebrow award__eyebrow" data-reveal="fade">Reconocimiento</p>
+      <h2 id="award-title" class="display award__title" data-reveal="lines">3.<sup>er</sup> puesto</h2>
+      <p class="lede" data-reveal="fade">Festival Municipal de Fotografía de Itagüí, 2020.</p>
+      <p class="prose award__note" data-reveal="fade">
+        Una noche de lluvia, un reflector encendido y una sola persona en la cancha.
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .award {
+    position: relative;
+    padding-block: var(--section-y);
+    overflow: clip;
+  }
+
+  .award__glow {
+    position: absolute;
+    left: 30%;
+    top: 18%;
+    width: 60vmax;
+    height: 60vmax;
+    translate: -50% -50%;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgb(233 244 251 / 0.28), rgb(110 193 240 / 0.08) 45%, transparent 75%);
+    pointer-events: none;
+    will-change: transform, opacity;
+  }
+
+  .award__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--gutter);
+    align-items: center;
+  }
+
+  .award__photo {
+    grid-column: 2 / span 4;
+  }
+
+  .award__photo :global(.photo__frame) {
+    box-shadow: var(--shadow-print-dark);
+  }
+
+  .award__text {
+    grid-column: 7 / span 6;
+    display: grid;
+    gap: 1.3rem;
+    justify-items: start;
+  }
+
+  .award__eyebrow {
+    color: var(--celeste-500);
+  }
+
+  .award__title {
+    font-size: var(--step-5);
+  }
+
+  .award__title sup {
+    font-size: 0.4em;
+    vertical-align: 0.9em;
+    margin-left: 0.04em;
+  }
+
+  .award__note {
+    color: color-mix(in srgb, var(--crema) 72%, transparent);
+  }
+
+  @media (max-width: 899px) {
+    .award__photo,
+    .award__text {
+      grid-column: 1 / -1;
+    }
+    .award__photo {
+      width: min(78vw, 380px);
+    }
+  }
+</style>

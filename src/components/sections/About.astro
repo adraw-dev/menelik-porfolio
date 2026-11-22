@@ -1,0 +1,199 @@
+---
+import Photo from '../ui/Photo.astro';
+import ChibiLine from '../ui/ChibiLine.astro';
+import { P } from '../../data/photos';
+import { profile } from '../../data/profile';
+---
+
+<section id="sobre" class="about" data-atmos="day" data-chapter="Sobre mí" aria-labelledby="about-title">
+  <div class="wrap about__grid">
+    <div class="about__media">
+      <div class="about__sticky">
+        <Photo
+          class="about__portrait"
+          photo={P.retrato}
+          sizes="(min-width: 1024px) 34vw, 88vw"
+          widths={[480, 720, 960, 1280]}
+          caption="Menelik Puerta · Páramo, 2025"
+        />
+        <div class="about__chibi" aria-hidden="true">
+          <ChibiLine />
+        </div>
+      </div>
+    </div>
+
+    <div class="about__body">
+      <p class="eyebrow about__eyebrow">01 — Sobre mí</p>
+      <h2 id="about-title" class="display h2" data-reveal="lines">
+        Imágenes que <em>conservan</em> lo importante.
+      </h2>
+
+      <p class="about__bio" data-reveal="scrub-words">{profile.bio.join(' ')}</p>
+      <p class="prose about__craft" data-reveal="fade">{profile.craft}</p>
+
+      <dl class="facts">
+        {
+          profile.facts.map((f) => (
+            <div class="fact glass" data-reveal="rise">
+              <dt class="fact__value">{f.value}</dt>
+              <dd class="fact__label">{f.label}</dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <div class="archive" aria-label="Archivo personal">
+        <p class="meta archive__title" data-reveal="fade">Desde 2017 detrás de la cámara</p>
+        <div class="archive__prints">
+          <Photo class="archive__print archive__print--1" photo={P.orquideorama} sizes="(min-width: 1024px) 14vw, 38vw" widths={[320, 480, 720]} caption={true} lightbox="archivo" depth={0.35} />
+          <Photo class="archive__print archive__print--2" photo={P.piedad} sizes="(min-width: 1024px) 13vw, 34vw" widths={[320, 480, 720]} caption={true} lightbox="archivo" depth={0.7} />
+          <Photo class="archive__print archive__print--3" photo={P.gata} sizes="(min-width: 1024px) 12vw, 32vw" widths={[320, 480, 720]} caption="En casa · 2026" lightbox="archivo" depth={0.15} />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about {
+    position: relative;
+    padding-block: var(--section-y);
+  }
+
+  .about__grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--gutter);
+  }
+
+  .about__media {
+    grid-column: 1 / span 5;
+  }
+
+  .about__sticky {
+    position: sticky;
+    top: 7rem;
+  }
+
+  .about__media :global(.about__portrait .photo__frame) {
+    box-shadow: var(--shadow-print);
+  }
+
+  .about__chibi {
+    position: absolute;
+    width: 46%;
+    right: -18%;
+    bottom: -10%;
+    color: var(--celeste-500);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .about__body {
+    grid-column: 7 / span 6;
+    display: grid;
+    gap: 2rem;
+    align-content: start;
+    padding-top: 2rem;
+  }
+
+  .about__eyebrow {
+    color: var(--celeste-700);
+  }
+
+  .about__bio {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 360;
+    font-variation-settings: 'SOFT' 100;
+    line-height: 1.28;
+    letter-spacing: -0.005em;
+    text-wrap: pretty;
+  }
+
+  .about__craft {
+    color: var(--tinta-suave);
+  }
+
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+    margin-top: 1rem;
+  }
+
+  .fact {
+    display: grid;
+    gap: 0.4rem;
+    align-content: start;
+    padding: 1.2rem 1.3rem 1.3rem;
+    border-radius: 18px;
+    --glass-fill: rgb(232 244 251 / 0.6);
+  }
+
+  .fact__value {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 450;
+    font-variation-settings: 'SOFT' 100;
+    line-height: 1;
+    color: var(--profundo-900);
+  }
+
+  .fact__label {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: var(--tinta-suave);
+  }
+
+  .archive {
+    margin-top: 3rem;
+  }
+
+  .archive__title {
+    margin-bottom: 1.5rem;
+  }
+
+  .archive__prints {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr 0.9fr;
+    align-items: start;
+    gap: clamp(0.8rem, 2vw, 2rem);
+  }
+
+  .archive__prints :global(.archive__print--2) {
+    margin-top: 4rem;
+  }
+  .archive__prints :global(.archive__print--3) {
+    margin-top: 1.5rem;
+  }
+  .archive__prints :global(.photo__frame) {
+    box-shadow: var(--shadow-print);
+  }
+
+  @media (max-width: 1023px) {
+    .about__media,
+    .about__body {
+      grid-column: 1 / -1;
+    }
+    .about__sticky {
+      position: relative;
+      top: 0;
+      max-width: 520px;
+    }
+    .about__chibi {
+      right: -6%;
+      width: 40%;
+    }
+    .about__body {
+      padding-top: 3rem;
+    }
+  }
+
+  @media (max-width: 559px) {
+    .facts {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

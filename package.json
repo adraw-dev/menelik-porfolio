@@ -1,0 +1,21 @@
+{
+  "name": "menelik-portafolio",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "prepare-assets": "node scripts/prepare-assets.mjs",
+    "predev": "node scripts/prepare-assets.mjs",
+    "dev": "astro dev",
+    "prebuild": "node scripts/prepare-assets.mjs",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@fontsource-variable/fraunces": "^5.3.0",
+    "@fontsource-variable/manrope": "^5.3.0",
+    "astro": "^7.4.13",
+    "gsap": "^3.15.1",
+    "sharp": "^0.35.5"
+  }
+}

@@ -1,0 +1,96 @@
+---
+// Loader integrado. El SVG se toma del archivo ORIGINAL (loader-animated.html) en compilación;
+// se conserva el dibujo, los tiempos relativos y el layout responsive. Cambios para el sitio:
+// reproducción única (×0.75 ≈ 2.9 s), raster externo optimizado, botón "Saltar intro" y
+// salida coreografiada hacia la navegación (ver src/scripts/loader.ts).
+// "Menelik" usa contornos derivados de Grandstander, Copyright 2020 The Grandstander Project Authors,
+// bajo SIL Open Font License 1.1.
+import { loaderSvg } from '../../lib/loader-source';
+---
+
+<div class="loader" data-loader>
+  <div class="loader__bg" data-loader-bg></div>
+  <div class="loader__stage" data-loader-stage aria-hidden="true">
+    <Fragment set:html={loaderSvg} />
+  </div>
+  <button class="loader__skip" type="button" data-loader-skip>Saltar intro</button>
+  <p class="sr-only" role="status">Cargando el portafolio de Menelik Puerta</p>
+</div>
+
+<style>
+  .loader {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    color: var(--crema);
+  }
+
+  :global(html:not(.is-loading)) .loader {
+    display: none;
+  }
+
+  .loader__bg {
+    position: absolute;
+    inset: 0;
+    background: var(--profundo-900);
+    clip-path: ellipse(150% 150% at 50% 0%);
+  }
+
+  .loader__stage {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+    min-height: 320px;
+  }
+
+  /* Estilos del loader original (cl-loader), con alcance */
+  .loader :global(svg) {
+    --ar: 2.4;
+    display: block;
+    width: min(88vw, 1120px, calc(76svh * var(--ar)));
+    height: auto;
+    overflow: visible;
+  }
+  .loader :global(.cl-outline path) {
+    fill: none;
+    stroke: var(--crema);
+    stroke-width: 11;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .loader :global(.cl-outline .cl-word path) {
+    stroke-width: 4.5;
+  }
+  .loader :global(.cl-filled .cl-word path) {
+    fill: var(--relleno);
+    stroke: none;
+  }
+
+  .loader__skip {
+    position: absolute;
+    right: max(16px, env(safe-area-inset-right));
+    bottom: max(16px, env(safe-area-inset-bottom));
+    min-height: 40px;
+    padding: 0.55rem 1rem;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgb(250 246 249 / 0.72);
+    background: rgb(250 246 249 / 0.06);
+    border: 1px solid rgb(250 246 249 / 0.18);
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    transition: color var(--dur-fast), border-color var(--dur-fast);
+  }
+  .loader__skip:hover {
+    color: var(--relleno);
+    border-color: rgb(250 246 249 / 0.4);
+  }
+  .loader__skip:focus-visible {
+    outline: 2px solid var(--relleno);
+    outline-offset: 2px;
+  }
+</style>

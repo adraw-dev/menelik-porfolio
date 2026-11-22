@@ -1,0 +1,54 @@
+---
+// Capa de color fija del concepto "del celeste a la noche". Solo se activa con movimiento
+// (html.has-atmos); motion/atmosphere.ts hace el fundido de opacidad entre capas (compositor).
+---
+
+<div class="atmos" aria-hidden="true">
+  <i data-atmos-layer="dawn"></i>
+  <i data-atmos-layer="day"></i>
+  <i data-atmos-layer="fog"></i>
+  <i data-atmos-layer="night"></i>
+</div>
+
+<style>
+  .atmos {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    display: none;
+    pointer-events: none;
+  }
+
+  :global(html.has-atmos) .atmos {
+    display: block;
+  }
+
+  .atmos i {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    will-change: opacity;
+  }
+
+  .atmos i[data-atmos-layer='dawn'] {
+    opacity: 1;
+    background:
+      radial-gradient(70% 60% at 85% 0%, rgb(110 193 240 / 0.35), transparent 70%),
+      linear-gradient(180deg, #e8f4fb 0%, #dcedf8 55%, #eef6fb 100%);
+  }
+  .atmos i[data-atmos-layer='day'] {
+    background:
+      radial-gradient(60% 50% at 0% 0%, rgb(232 244 251 / 0.9), transparent 70%),
+      #f6fafc;
+  }
+  .atmos i[data-atmos-layer='fog'] {
+    background:
+      radial-gradient(70% 50% at 50% 40%, #edf1f3, transparent 75%),
+      linear-gradient(180deg, #e2e8eb 0%, #cfd8dc 100%);
+  }
+  .atmos i[data-atmos-layer='night'] {
+    background:
+      radial-gradient(60% 45% at 50% 0%, rgb(24 43 53 / 0.9), transparent 75%),
+      #0e1a21;
+  }
+</style>

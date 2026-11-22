@@ -1,0 +1,52 @@
+---
+import Base from '../layouts/Base.astro';
+import Loader from '../components/loader/Loader.astro';
+import Nav from '../components/nav/Nav.astro';
+import ProgressRail from '../components/nav/ProgressRail.astro';
+import Atmosphere from '../components/ui/Atmosphere.astro';
+import Hero from '../components/sections/Hero.astro';
+import About from '../components/sections/About.astro';
+import WorkIntro from '../components/sections/WorkIntro.astro';
+import Album from '../components/collections/Album.astro';
+import Strip from '../components/collections/Strip.astro';
+import Collage from '../components/collections/Collage.astro';
+import Stack from '../components/collections/Stack.astro';
+import ContactSheet from '../components/collections/ContactSheet.astro';
+import Award from '../components/sections/Award.astro';
+import Reels from '../components/sections/Reels.astro';
+import Services from '../components/sections/Services.astro';
+import Contact from '../components/sections/Contact.astro';
+import Lightbox from '../components/lightbox/Lightbox.astro';
+import { collections } from '../data/photos';
+
+const [celebraciones, ruta, pueblo, altura, escena] = collections;
+---
+
+<Base>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+  <Loader />
+  <Atmosphere />
+  <Nav />
+  <ProgressRail />
+
+  <main id="contenido">
+    <Hero />
+    <About />
+    <WorkIntro />
+    <Album c={celebraciones} />
+    <Strip c={ruta} />
+    <Collage c={pueblo} />
+    <Stack c={altura} />
+    <ContactSheet c={escena} />
+    <Award />
+    <Reels />
+    <Services />
+    <Contact />
+  </main>
+
+  <Lightbox />
+</Base>
+
+<script>
+  import '../scripts/main';
+</script>

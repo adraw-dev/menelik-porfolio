@@ -1,0 +1,133 @@
+---
+// 02 · En ruta — tira horizontal fijada (escritorio con movimiento) / carrusel nativo con snap (móvil).
+import Photo from '../ui/Photo.astro';
+import CollectionHeader from './CollectionHeader.astro';
+import type { Collection } from '../../data/photos';
+
+interface Props { c: Collection }
+const { c } = Astro.props;
+---
+
+<section id={c.id} class="strip" data-atmos={c.atmos} data-chapter={c.title} aria-labelledby={`${c.id}-title`} data-strip>
+  <div class="strip__stage">
+    <div class="strip__track" data-strip-track>
+      <div class="strip__intro">
+        <CollectionHeader c={c} />
+        <p class="meta strip__hint" aria-hidden="true">Sigue bajando — la carretera avanza →</p>
+      </div>
+      {
+        c.photos.map((p, i) => (
+          <Photo
+            class={`strip__item strip__item--${i + 1}`}
+            photo={p}
+            lightbox={c.id}
+            caption={true}
+            sizes="(min-width: 1024px) 48vh, 78vw"
+            widths={[480, 720, 960, 1280, 1600]}
+          />
+        ))
+      }
+      <div class="strip__road" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .strip {
+    position: relative;
+    padding-block: clamp(3rem, 8vh, 6rem);
+  }
+
+  .strip__track {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: clamp(1.25rem, 3vw, 3.5rem);
+    padding-inline: var(--gutter);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    padding-bottom: 2.5rem;
+  }
+  .strip__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .strip__intro {
+    flex: 0 0 min(86vw, 480px);
+    scroll-snap-align: start;
+    display: grid;
+    gap: 2rem;
+  }
+
+  .strip__hint {
+    display: none;
+  }
+
+  .strip__track :global(.strip__item) {
+    flex: 0 0 auto;
+    width: min(78vw, 420px);
+    scroll-snap-align: center;
+  }
+
+  .strip__track :global(.strip__item .photo__frame) {
+    box-shadow: var(--shadow-print);
+  }
+
+  .strip__track :global(.strip__item--2) {
+    translate: 0 6%;
+  }
+
+  /* Línea de carretera (detalle gráfico: amarillo de las barandas de la sesión) */
+  .strip__road {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.6rem;
+    height: 2px;
+    background: repeating-linear-gradient(90deg, #e7b53a 0 38px, transparent 38px 64px);
+    opacity: 0.7;
+  }
+
+  /* Escritorio con movimiento: escena fijada, el scroll vertical mueve la tira */
+  @media (min-width: 1024px) {
+    :global(html.has-motion) .strip {
+      height: 320svh;
+      padding: 0;
+    }
+    :global(html.has-motion) .strip__stage {
+      position: sticky;
+      top: 0;
+      height: 100svh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+    :global(html.has-motion) .strip__track {
+      overflow: visible;
+      scroll-snap-type: none;
+      width: max-content;
+      padding-inline: var(--gutter) 12vw;
+      will-change: transform;
+    }
+    :global(html.has-motion) .strip__intro {
+      flex-basis: 34vw;
+    }
+    :global(html.has-motion) .strip__hint {
+      display: block;
+    }
+    :global(html.has-motion) .strip__track :global(.strip__item) {
+      width: auto;
+      height: 72svh;
+    }
+    :global(html.has-motion) .strip__track :global(.strip__item .photo__frame) {
+      height: calc(72svh - 2rem);
+      width: auto;
+    }
+    :global(html.has-motion) .strip__track :global(.strip__item picture),
+    :global(html.has-motion) .strip__track :global(.strip__item img) {
+      width: auto;
+      height: 100%;
+    }
+  }
+</style>

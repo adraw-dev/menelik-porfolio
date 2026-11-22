@@ -1,0 +1,152 @@
+/* Liquid Glass — uso estratégico: navegación, botones, chips, etiquetas e indicadores.
+   Nunca en bloques de texto largos. Máximo 3–4 superficies visibles a la vez. */
+.glass {
+  --glass-fill: rgb(246 250 252 / 0.52);
+  --glass-edge: rgb(255 255 255 / 0.55);
+  --glass-shade: rgb(19 35 44 / 0.1);
+  --glass-blur: 18px;
+  position: relative;
+  isolation: isolate;
+  background: var(--glass-fill);
+  border: 1px solid var(--glass-edge);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.65),
+    inset 0 -1px 0 rgb(255 255 255 / 0.12),
+    0 8px 24px -12px var(--glass-shade),
+    0 2px 6px -2px var(--glass-shade);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(165%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(165%);
+}
+
+/* Reflejo superior */
+.glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(
+    172deg,
+    rgb(255 255 255 / 0.55) 0%,
+    rgb(255 255 255 / 0.08) 38%,
+    rgb(255 255 255 / 0) 60%,
+    rgb(169 220 247 / 0.14) 100%
+  );
+  pointer-events: none;
+}
+
+.glass--dark,
+.on-dark .glass {
+  --glass-fill: rgb(24 43 53 / 0.42);
+  --glass-edge: rgb(169 220 247 / 0.22);
+  --glass-shade: rgb(0 0 0 / 0.4);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.14),
+    0 10px 30px -14px var(--glass-shade);
+}
+
+.on-dark .glass::before,
+.glass--dark::before {
+  background: linear-gradient(172deg, rgb(255 255 255 / 0.16) 0%, rgb(255 255 255 / 0) 45%, rgb(110 193 240 / 0.12) 100%);
+}
+
+@media (max-width: 767px) {
+  .glass {
+    --glass-blur: 10px;
+    --glass-fill: rgb(246 250 252 / 0.72);
+  }
+  .glass--dark,
+  .on-dark .glass {
+    --glass-fill: rgb(24 43 53 / 0.66);
+  }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass { --glass-fill: rgb(246 250 252 / 0.92); }
+  .glass--dark, .on-dark .glass { --glass-fill: rgb(24 43 53 / 0.92); }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass {
+    --glass-fill: var(--niebla-50);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .glass--dark,
+  .on-dark .glass {
+    --glass-fill: var(--profundo-900);
+  }
+}
+
+/* Botón de vidrio */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  min-height: 48px;
+  padding: 0.8em 1.4em;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    background-color var(--dur-base) var(--ease-out);
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn--solid {
+  background: var(--tinta);
+  color: var(--crema);
+  border: 1px solid transparent;
+}
+
+.on-dark .btn--solid {
+  background: var(--celeste-500);
+  color: var(--profundo-950);
+}
+
+@media (hover: hover) {
+  .btn.glass:hover {
+    --glass-fill: rgb(246 250 252 / 0.72);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.8),
+      0 0 0 4px rgb(110 193 240 / 0.18),
+      0 12px 30px -12px var(--glass-shade);
+  }
+  .on-dark .btn.glass:hover {
+    --glass-fill: rgb(24 43 53 / 0.6);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.2), 0 0 0 4px rgb(110 193 240 / 0.2);
+  }
+  .btn--solid:hover {
+    background: var(--profundo-900);
+  }
+  .on-dark .btn--solid:hover {
+    background: var(--celeste-300);
+  }
+}
+
+.btn svg {
+  width: 1.1em;
+  height: 1.1em;
+  flex: none;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  min-height: 36px;
+  padding: 0.45em 0.95em;
+  border-radius: var(--radius-pill);
+  font-size: var(--step--1);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+}

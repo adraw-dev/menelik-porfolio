@@ -1,0 +1,99 @@
+<dialog class="lightbox on-dark" data-lightbox-dialog aria-label="Visor de fotografías">
+  <figure class="lightbox__figure">
+    <div class="lightbox__media" data-lightbox-media></div>
+    <figcaption class="lightbox__cap">
+      <span class="meta" data-lightbox-caption></span>
+      <span class="meta lightbox__count" aria-live="polite" data-lightbox-count></span>
+    </figcaption>
+  </figure>
+  <button class="lightbox__btn lightbox__btn--prev glass" type="button" data-lightbox-prev aria-label="Fotografía anterior">
+    <svg viewBox="0 0 20 20" width="20" height="20" fill="none" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+  </button>
+  <button class="lightbox__btn lightbox__btn--next glass" type="button" data-lightbox-next aria-label="Fotografía siguiente">
+    <svg viewBox="0 0 20 20" width="20" height="20" fill="none" aria-hidden="true"><path d="M7.5 4.5 13 10l-5.5 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+  </button>
+  <button class="lightbox__btn lightbox__btn--close glass" type="button" data-lightbox-close aria-label="Cerrar visor">
+    <svg viewBox="0 0 20 20" width="20" height="20" fill="none" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg>
+  </button>
+</dialog>
+
+<style>
+  .lightbox {
+    width: 100vw;
+    height: 100svh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    overflow: hidden;
+  }
+
+  .lightbox::backdrop {
+    background: rgb(14 26 33 / 0.94);
+  }
+
+  .lightbox__figure {
+    position: absolute;
+    inset: clamp(3.5rem, 6vh, 5rem) clamp(1rem, 7vw, 7rem) clamp(4rem, 8vh, 5.5rem);
+    display: grid;
+    grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+    place-items: center;
+  }
+
+  .lightbox__media {
+    display: contents;
+  }
+
+  .lightbox__media :global(img) {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 2px;
+    box-shadow: 0 30px 90px rgb(0 0 0 / 0.55);
+    transform-origin: 0 0;
+    touch-action: pan-y;
+    user-select: none;
+  }
+
+  .lightbox__cap {
+    position: fixed;
+    left: 50%;
+    bottom: clamp(1rem, 3vh, 1.8rem);
+    translate: -50% 0;
+    display: flex;
+    gap: 1.5rem;
+    white-space: nowrap;
+  }
+
+  .lightbox__count {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .lightbox__btn {
+    position: fixed;
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    cursor: pointer;
+    color: var(--crema);
+  }
+
+  .lightbox__btn--prev { left: clamp(0.6rem, 2vw, 2rem); top: 50%; translate: 0 -50%; }
+  .lightbox__btn--next { right: clamp(0.6rem, 2vw, 2rem); top: 50%; translate: 0 -50%; }
+  .lightbox__btn--close { right: clamp(0.6rem, 2vw, 2rem); top: clamp(0.6rem, 2vw, 1.5rem); }
+
+  @media (max-width: 767px) {
+    .lightbox__btn--prev,
+    .lightbox__btn--next {
+      top: auto;
+      bottom: 4.2rem;
+      translate: none;
+    }
+  }
+</style>

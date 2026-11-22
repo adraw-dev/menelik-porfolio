@@ -1,0 +1,257 @@
+---
+// Trabajo audiovisual (rol: edición). Las piezas viven en cuentas de clientes: se muestran como
+// pósters tipográficos y el embed de Instagram se carga solo al pedirlo (patrón facade).
+import { reels } from '../../data/reels';
+---
+
+<section id="video" class="reels on-dark" data-atmos="night" data-chapter="Video" aria-labelledby="reels-title">
+  <div class="wrap reels__head">
+    <p class="eyebrow reels__eyebrow">03 — En movimiento</p>
+    <h2 id="reels-title" class="display h2" data-reveal="lines">Edición para <em>redes</em></h2>
+    <p class="lede" data-reveal="fade">
+      Reels verticales editados en CapCut y selección y retoque fotográfico para carruseles de Instagram.
+    </p>
+  </div>
+
+  <ul class="reels__list" role="list" data-tilt-field>
+    {
+      reels.map((r, i) => (
+        <li class:list={['reel', r.kind === 'Carrusel' && 'reel--carousel']} style={`--a:${r.tone[0]};--b:${r.tone[1]}`} data-depth={0.15 + (i % 3) * 0.18}>
+          <a
+            class="reel__card"
+            href={r.url}
+            target="_blank"
+            rel="noopener"
+            data-embed={r.url}
+            data-embed-title={r.title}
+            data-tilt
+          >
+            <span class="reel__top">
+              <span class="meta">{r.kind} · Edición</span>
+              <span class="reel__ig" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.6"></rect><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"></circle><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor"></circle></svg>
+              </span>
+            </span>
+            <span class="reel__title display">{r.title}</span>
+            <span class="reel__bottom">
+              <span class="reel__play glass" aria-hidden="true">
+                <svg viewBox="0 0 20 20" width="18" height="18"><path d="M7 5.5v9l7.5-4.5z" fill="currentColor"></path></svg>
+              </span>
+              <span class="reel__meta">
+                <span>{r.category}</span>
+                <span class="meta">{r.date}</span>
+              </span>
+            </span>
+            <span class="sr-only">(abre la publicación de Instagram)</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<dialog class="embed on-dark" data-embed-dialog aria-labelledby="embed-title">
+  <div class="embed__bar">
+    <p id="embed-title" class="meta" data-embed-dialog-title>Instagram</p>
+    <a class="chip glass" href="#" target="_blank" rel="noopener" data-embed-dialog-link>Abrir en Instagram ↗</a>
+    <button class="embed__close glass" type="button" data-embed-close aria-label="Cerrar">
+      <svg viewBox="0 0 20 20" width="18" height="18" fill="none" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg>
+    </button>
+  </div>
+  <div class="embed__body" data-embed-body></div>
+</dialog>
+
+<style>
+  .reels {
+    position: relative;
+    padding-block: var(--section-y);
+    overflow: clip;
+  }
+
+  .reels__head {
+    display: grid;
+    gap: 1.3rem;
+    justify-items: start;
+  }
+
+  .reels__eyebrow {
+    color: var(--celeste-500);
+  }
+
+  .reels__list {
+    display: flex;
+    gap: clamp(1rem, 2vw, 1.75rem);
+    margin-top: clamp(3rem, 7vw, 5rem);
+    padding: 1rem var(--gutter) 3rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    perspective: 1200px;
+  }
+  .reels__list::-webkit-scrollbar { display: none; }
+
+  .reel {
+    flex: 0 0 auto;
+    width: clamp(220px, 19vw, 300px);
+    scroll-snap-align: center;
+  }
+
+  .reel:nth-child(even) {
+    margin-top: 3.5rem;
+  }
+
+  .reel__card {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    aspect-ratio: 9 / 16;
+    padding: 1.1rem;
+    border-radius: 22px;
+    overflow: hidden;
+    text-decoration: none;
+    color: var(--crema);
+    background:
+      radial-gradient(120% 70% at 20% 0%, color-mix(in srgb, var(--a) 70%, transparent), transparent 60%),
+      radial-gradient(90% 60% at 100% 100%, color-mix(in srgb, var(--a) 35%, transparent), transparent 70%),
+      var(--b);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.12), var(--shadow-print-dark);
+    transform-style: preserve-3d;
+    transition: box-shadow var(--dur-base) var(--ease-out);
+  }
+
+  .reel--carousel .reel__card {
+    aspect-ratio: 4 / 5;
+    color: var(--tinta);
+  }
+  .reel--carousel .meta { color: var(--tinta-suave); }
+
+  /* Textura de grano sutil para que el póster no sea un degradado plano */
+  .reel__card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+    opacity: 0.22;
+    pointer-events: none;
+  }
+
+  .reel__top,
+  .reel__bottom {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .reel__title {
+    position: relative;
+    z-index: 1;
+    align-self: center;
+    font-size: clamp(1.7rem, 1.2rem + 1.2vw, 2.4rem);
+    line-height: 1;
+  }
+
+  .reel__bottom {
+    align-items: end;
+  }
+
+  .reel__meta {
+    display: grid;
+    gap: 0.2rem;
+    text-align: right;
+    font-size: 0.88rem;
+    font-weight: 600;
+  }
+
+  .reel__play {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    --glass-fill: rgb(246 250 252 / 0.2);
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+
+  @media (hover: hover) {
+    .reel__card:hover .reel__play {
+      transform: scale(1.08);
+    }
+    .reel__card:hover {
+      box-shadow: inset 0 0 0 1px rgb(169 220 247 / 0.45), 0 0 0 4px rgb(110 193 240 / 0.15), var(--shadow-print-dark);
+    }
+  }
+
+  @media (min-width: 1100px) {
+    .reels__list {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      align-items: start;
+      width: min(100% - var(--gutter) * 2, var(--max));
+      margin-inline: auto;
+      padding-inline: 0;
+      overflow: visible;
+    }
+    .reel {
+      width: auto;
+    }
+  }
+
+  /* Diálogo del embed */
+  .embed {
+    width: min(94vw, 480px);
+    max-height: 92svh;
+    padding: 0;
+    border: 0;
+    border-radius: 20px;
+    background: var(--profundo-900);
+    color: var(--crema);
+    box-shadow: 0 30px 80px rgb(0 0 0 / 0.5);
+  }
+  .embed::backdrop {
+    background: rgb(14 26 33 / 0.7);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+  .embed__bar {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.8rem 0.8rem 0.8rem 1.1rem;
+    background: var(--profundo-900);
+  }
+  .embed__bar p {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .embed__close {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .embed__body {
+    min-height: 420px;
+    padding: 0 0.8rem 0.8rem;
+    overflow: auto;
+  }
+  .embed__body :global(.instagram-media) {
+    margin: 0 auto !important;
+    min-width: 0 !important;
+  }
+  .embed__body :global(.embed__loading) {
+    display: grid;
+    place-items: center;
+    min-height: 420px;
+  }
+</style>

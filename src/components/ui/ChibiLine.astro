@@ -1,0 +1,28 @@
+---
+// Chibi en trazo, tomado del loader original. Se re-dibuja con el scroll (data-draw).
+import { chibiPaths, chibiViewBox } from '../../lib/loader-source';
+
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<svg class:list={['chibi-line', className]} viewBox={chibiViewBox} aria-hidden="true" focusable="false" data-draw>
+  {chibiPaths.map((p) => <path d={p.d} data-delay={p.delay} />)}
+</svg>
+
+<style>
+  .chibi-line {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+  .chibi-line path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 11;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+</style>

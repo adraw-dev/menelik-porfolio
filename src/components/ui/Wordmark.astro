@@ -1,0 +1,30 @@
+---
+// Logotipo "Menelik" — contornos del loader original (derivados de Grandstander, OFL 1.1).
+import { wordPaths, wordViewBox } from '../../lib/loader-source';
+
+interface Props {
+  class?: string;
+  title?: string;
+}
+const { class: className, title } = Astro.props;
+---
+
+<svg
+  class:list={['wordmark', className]}
+  viewBox={wordViewBox}
+  role={title ? 'img' : undefined}
+  aria-hidden={title ? undefined : 'true'}
+  aria-label={title}
+  focusable="false"
+>
+  {wordPaths.map((d) => <path d={d} />)}
+</svg>
+
+<style>
+  .wordmark {
+    height: 1em;
+    width: auto;
+    fill: currentColor;
+    overflow: visible;
+  }
+</style>

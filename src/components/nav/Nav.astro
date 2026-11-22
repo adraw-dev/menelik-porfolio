@@ -1,0 +1,217 @@
+---
+import Wordmark from '../ui/Wordmark.astro';
+
+const links = [
+  { href: '#sobre', label: 'Sobre mí' },
+  { href: '#trabajo', label: 'Trabajo' },
+  { href: '#video', label: 'Video' },
+  { href: '#servicios', label: 'Servicios' },
+  { href: '#contacto', label: 'Contacto' },
+];
+---
+
+<header class="nav" data-nav>
+  <a class="nav__brand" href="#inicio" aria-label="Menelik Puerta, volver al inicio">
+    <Wordmark class="nav__logo" />
+  </a>
+
+  <nav class="nav__pill glass" aria-label="Principal">
+    <ul role="list">
+      {links.map((l) => <li><a href={l.href} data-nav-link>{l.label}</a></li>)}
+    </ul>
+  </nav>
+
+  <a class="btn btn--solid nav__cta" href="#contacto">Hablemos</a>
+
+  <button class="nav__toggle glass" type="button" aria-expanded="false" aria-controls="menu" data-menu-toggle>
+    <span class="nav__toggle-label">Menú</span>
+    <span class="nav__burger" aria-hidden="true"><i></i><i></i></span>
+  </button>
+  <span class="nav__progress" aria-hidden="true"><i data-progress-bar></i></span>
+</header>
+
+<div id="menu" class="menu on-dark" data-menu hidden>
+  <nav aria-label="Menú móvil">
+    <ol role="list" class="menu__list">
+      {
+        links.map((l, i) => (
+          <li>
+            <a href={l.href} data-menu-link>
+              <span class="meta">{String(i + 1).padStart(2, '0')}</span>
+              <span class="display">{l.label}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </nav>
+</div>
+
+<style>
+  .nav {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 60;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 1rem;
+    padding: max(0.9rem, env(safe-area-inset-top)) var(--gutter) 0.9rem;
+    color: var(--tinta);
+    transition: color var(--dur-slow) var(--ease-out);
+    pointer-events: none;
+  }
+
+  .nav > * {
+    pointer-events: auto;
+  }
+
+  :global(html[data-zone='dark']) .nav {
+    color: var(--crema);
+  }
+
+  .nav__brand {
+    justify-self: start;
+    display: inline-flex;
+    padding: 0.4rem 0.2rem;
+    text-decoration: none;
+  }
+
+  .nav__brand :global(.nav__logo) {
+    height: clamp(1.5rem, 1.2rem + 0.8vw, 2rem);
+  }
+
+  .nav__pill {
+    border-radius: var(--radius-pill);
+    padding: 0.3rem;
+  }
+
+  :global(html[data-zone='dark']) .nav__pill,
+  :global(html[data-zone='dark']) .nav__toggle {
+    --glass-fill: rgb(24 43 53 / 0.45);
+    --glass-edge: rgb(169 220 247 / 0.22);
+  }
+
+  .nav__pill ul {
+    display: flex;
+    gap: 0.15rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nav__pill a {
+    display: block;
+    padding: 0.55rem 1rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color var(--dur-base) var(--ease-out);
+  }
+
+  .nav__pill a[aria-current='true'] {
+    background: rgb(110 193 240 / 0.28);
+  }
+
+  @media (hover: hover) {
+    .nav__pill a:hover {
+      background: rgb(110 193 240 / 0.18);
+    }
+  }
+
+  .nav__cta {
+    justify-self: end;
+    min-height: 44px;
+    padding-block: 0.6em;
+  }
+
+  :global(html[data-zone='dark']) .nav__cta {
+    background: var(--celeste-500);
+    color: var(--profundo-950);
+  }
+
+  .nav__toggle {
+    display: none;
+    justify-self: end;
+    align-items: center;
+    gap: 0.7rem;
+    min-height: 44px;
+    padding: 0 1rem;
+    border-radius: var(--radius-pill);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+
+  .nav__burger {
+    display: grid;
+    gap: 5px;
+  }
+  .nav__burger i {
+    display: block;
+    width: 18px;
+    height: 1.5px;
+    background: currentColor;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  .nav__toggle[aria-expanded='true'] .nav__burger i:first-child { transform: translateY(3.25px) rotate(45deg); }
+  .nav__toggle[aria-expanded='true'] .nav__burger i:last-child { transform: translateY(-3.25px) rotate(-45deg); }
+
+  .nav__progress {
+    position: absolute;
+    inset: auto 0 0;
+    height: 2px;
+    overflow: hidden;
+  }
+  .nav__progress i {
+    display: block;
+    height: 100%;
+    background: var(--celeste-500);
+    transform-origin: 0 50%;
+    transform: scaleX(0);
+  }
+
+  @media (max-width: 899px) {
+    .nav {
+      grid-template-columns: 1fr auto;
+    }
+    .nav__pill,
+    .nav__cta {
+      display: none;
+    }
+    .nav__toggle {
+      display: inline-flex;
+    }
+  }
+
+  /* Menú móvil a pantalla completa */
+  .menu {
+    position: fixed;
+    inset: 0;
+    z-index: 55;
+    display: grid;
+    align-items: center;
+    padding: 6rem var(--gutter) 3rem;
+    background: rgb(14 26 33 / 0.86);
+    -webkit-backdrop-filter: blur(22px) saturate(150%);
+    backdrop-filter: blur(22px) saturate(150%);
+  }
+  .menu[hidden] {
+    display: none;
+  }
+  .menu__list {
+    display: grid;
+    gap: 0.4rem;
+  }
+  .menu__list a {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.4rem 0;
+    text-decoration: none;
+  }
+  .menu__list .display {
+    font-size: clamp(2.4rem, 11vw, 4rem);
+  }
+</style>

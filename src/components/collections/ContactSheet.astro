@@ -1,0 +1,92 @@
+---
+// 05 · Escena — hoja de contactos nocturna.
+import Photo from '../ui/Photo.astro';
+import CollectionHeader from './CollectionHeader.astro';
+import type { Collection } from '../../data/photos';
+
+interface Props { c: Collection }
+const { c } = Astro.props;
+---
+
+<section id={c.id} class="sheet on-dark" data-atmos={c.atmos} data-chapter={c.title} aria-labelledby={`${c.id}-title`}>
+  <div class="wrap">
+    <CollectionHeader c={c} />
+    <div class="sheet__grid">
+      {
+        c.photos.map((p, i) => (
+          <div class={`sheet__cell sheet__cell--${i + 1}`}>
+            <span class="sheet__frame-no meta" aria-hidden="true">{`${String(i + 12).padStart(2, '0')}A`}</span>
+            <Photo
+              photo={p}
+              lightbox={c.id}
+              sizes={i === 0 ? '(min-width: 1024px) 40vw, 92vw' : '(min-width: 1024px) 24vw, 46vw'}
+              widths={[400, 640, 900, 1200, 1500]}
+              depth={i === 0 ? 0.1 : 0.2 + i * 0.06}
+            />
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .sheet {
+    position: relative;
+    padding-block: var(--section-y);
+  }
+
+  .sheet::before {
+    /* luz de escenario: halo violeta estático, no compite con las fotos */
+    content: '';
+    position: absolute;
+    inset: 10% 0 0;
+    background: radial-gradient(45% 40% at 70% 45%, rgb(122 70 170 / 0.22), transparent 70%);
+    pointer-events: none;
+  }
+
+  .sheet__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: clamp(1rem, 2vw, 1.75rem);
+    margin-top: clamp(3rem, 7vw, 5rem);
+    padding: clamp(1.2rem, 2.4vw, 2rem);
+    border-radius: 6px;
+    background:
+      /* perforaciones de película arriba y abajo */
+      radial-gradient(circle at 50% 50%, rgb(245 237 222 / 0.14) 0 3px, transparent 3.5px) 0 6px / 22px 14px repeat-x,
+      radial-gradient(circle at 50% 50%, rgb(245 237 222 / 0.14) 0 3px, transparent 3.5px) 0 calc(100% - 6px) / 22px 14px repeat-x,
+      rgb(255 255 255 / 0.03);
+    border: 1px solid rgb(245 237 222 / 0.08);
+  }
+
+  .sheet__cell {
+    position: relative;
+  }
+
+  .sheet__cell :global(.photo__frame) {
+    box-shadow: var(--shadow-print-dark);
+  }
+
+  .sheet__frame-no {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #e7b53a;
+    opacity: 0.85;
+  }
+
+  .sheet__cell--1 { grid-column: 1 / span 5; grid-row: 1 / span 2; }
+  .sheet__cell--2 { grid-column: 6 / span 3; }
+  .sheet__cell--3 { grid-column: 9 / span 4; margin-top: 3rem; }
+  .sheet__cell--4 { grid-column: 6 / span 4; }
+  .sheet__cell--5 { grid-column: 10 / span 3; margin-top: 2rem; }
+
+  @media (max-width: 767px) {
+    .sheet__cell--1 { grid-column: 1 / -1; grid-row: auto; }
+    .sheet__cell--2,
+    .sheet__cell--4 { grid-column: 1 / span 6; margin-top: 0; }
+    .sheet__cell--3,
+    .sheet__cell--5 { grid-column: 7 / span 6; margin-top: 2rem; }
+  }
+</style>

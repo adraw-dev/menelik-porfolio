@@ -1,0 +1,260 @@
+---
+import { Image } from 'astro:assets';
+import { services, process, profile } from '../../data/profile';
+import { P } from '../../data/photos';
+
+const byFile = Object.fromEntries(Object.values(P).map((p) => [p.file, p]));
+---
+
+<section id="servicios" class="services" data-atmos="dawn" data-chapter="Servicios" aria-labelledby="services-title">
+  <div class="wrap">
+    <div class="services__head">
+      <p class="eyebrow services__eyebrow">04 — Servicios</p>
+      <h2 id="services-title" class="display h2" data-reveal="lines">Qué <em>hago</em></h2>
+    </div>
+
+    <ol class="svc" role="list" data-svc>
+      {
+        services.map((s, i) => (
+          <li class="svc__item" data-svc-item={s.photo ? i : undefined} data-reveal="rise">
+            <span class="svc__n meta">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="h3 svc__title">{s.title}</h3>
+            <p class="svc__text">{s.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+
+    <div class="svc-preview" aria-hidden="true" data-svc-preview>
+      {
+        services.map((s, i) =>
+          s.photo ? (
+            <Image src={byFile[s.photo].src} alt="" widths={[360, 540]} width={540} sizes="270px" class="svc-preview__img" data-svc-img={i} loading="lazy" />
+          ) : null,
+        )
+      }
+    </div>
+
+    <div class="process">
+      <h3 class="meta process__title" data-reveal="fade">Cómo trabajo · acompañamiento completo</h3>
+      <ol class="process__steps" role="list" data-process>
+        <span class="process__line" aria-hidden="true"><i data-process-line></i></span>
+        {
+          process.map((p, i) => (
+            <li class="process__step" data-reveal="rise">
+              <span class="process__dot" aria-hidden="true" />
+              <p class="process__name display">{p.step}</p>
+              <p class="process__text">{p.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+      <p class="tools" data-reveal="fade">
+        <span class="meta">Herramientas</span>
+        {profile.tools.map((t) => <span class="chip glass">{t}</span>)}
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .services {
+    position: relative;
+    padding-block: var(--section-y);
+  }
+
+  .services__head {
+    display: grid;
+    gap: 1.2rem;
+    margin-bottom: clamp(2.5rem, 6vw, 4.5rem);
+  }
+
+  .services__eyebrow {
+    color: var(--celeste-700);
+  }
+
+  .svc {
+    border-top: 1px solid rgb(19 35 44 / 0.14);
+  }
+
+  .svc__item {
+    display: grid;
+    grid-template-columns: 4rem minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: 1rem 2rem;
+    align-items: baseline;
+    padding: clamp(1.4rem, 3vw, 2.2rem) 0;
+    border-bottom: 1px solid rgb(19 35 44 / 0.14);
+    transition: padding var(--dur-base) var(--ease-out);
+  }
+
+  .svc__n {
+    color: var(--celeste-700);
+  }
+
+  .svc__title {
+    font-size: var(--step-3);
+    transition: translate var(--dur-base) var(--ease-out), color var(--dur-base);
+  }
+
+  .svc__text {
+    color: var(--tinta-suave);
+    max-width: 42ch;
+  }
+
+  @media (hover: hover) and (min-width: 900px) {
+    .svc__item:hover .svc__title {
+      translate: 0.6rem 0;
+      color: var(--celeste-700);
+    }
+  }
+
+  @media (max-width: 899px) {
+    .svc__item {
+      grid-template-columns: 2.5rem 1fr;
+    }
+    .svc__text {
+      grid-column: 2;
+    }
+  }
+
+  /* Vista previa que sigue al cursor (solo escritorio, la mueve motion/pointer.ts) */
+  .svc-preview {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 40;
+    width: 220px;
+    aspect-ratio: 4 / 5;
+    pointer-events: none;
+    opacity: 0;
+    border-radius: var(--radius-print);
+    overflow: hidden;
+    box-shadow: var(--shadow-print);
+    transition: opacity var(--dur-base) var(--ease-out);
+    display: none;
+  }
+  @media (hover: hover) and (pointer: fine) and (min-width: 900px) {
+    .svc-preview {
+      display: block;
+    }
+  }
+  .svc-preview.is-on {
+    opacity: 1;
+  }
+  .svc-preview :global(.svc-preview__img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity var(--dur-base) var(--ease-out);
+  }
+  .svc-preview :global(.svc-preview__img.is-on) {
+    opacity: 1;
+  }
+
+  /* Proceso */
+  .process {
+    margin-top: clamp(4rem, 10vw, 8rem);
+  }
+
+  .process__title {
+    margin-bottom: 2.5rem;
+  }
+
+  .process__steps {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--gutter);
+  }
+
+  .process__line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 7px;
+    height: 1px;
+    background: rgb(19 35 44 / 0.14);
+  }
+  .process__line i {
+    position: absolute;
+    inset: 0;
+    background: var(--celeste-700);
+    transform-origin: left;
+  }
+  :global(html.has-motion) .process__line i {
+    transform: scaleX(0);
+  }
+
+  .process__step {
+    position: relative;
+    display: grid;
+    gap: 0.8rem;
+    padding-top: 2.2rem;
+  }
+
+  .process__dot {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: var(--hielo-100);
+    border: 1.5px solid var(--celeste-700);
+  }
+
+  .process__name {
+    font-size: var(--step-3);
+    font-style: italic;
+    font-weight: 300;
+    font-variation-settings: 'SOFT' 100;
+  }
+
+  .process__text {
+    color: var(--tinta-suave);
+    max-width: 32ch;
+  }
+
+  .tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 3.5rem;
+  }
+  .tools .meta {
+    margin-right: 0.6rem;
+  }
+
+  @media (max-width: 767px) {
+    .process__steps {
+      grid-template-columns: 1fr;
+      gap: 2.2rem;
+      padding-left: 2rem;
+    }
+    .process__line {
+      left: 7px;
+      right: auto;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      height: auto;
+    }
+    .process__line i {
+      transform-origin: top;
+    }
+    :global(html.has-motion) .process__line i {
+      transform: scaleY(0);
+    }
+    .process__step {
+      padding-top: 0;
+    }
+    .process__dot {
+      left: -2rem;
+      top: 0.4rem;
+    }
+  }
+</style>

@@ -1,0 +1,151 @@
+---
+import ChibiLine from '../ui/ChibiLine.astro';
+import Wordmark from '../ui/Wordmark.astro';
+import { profile } from '../../data/profile';
+const c = profile.contact;
+---
+
+<section id="contacto" class="contact" data-atmos="dawn" data-chapter="Contacto" aria-labelledby="contact-title">
+  <div class="wrap contact__grid">
+    <div class="contact__text">
+      <p class="eyebrow contact__eyebrow">05 — Contacto</p>
+      <h2 id="contact-title" class="display contact__title" data-reveal="lines">
+        Hablemos de tu <em>próximo recuerdo</em>.
+      </h2>
+      <p class="lede" data-reveal="fade">Eventos, celebraciones familiares, retratos o contenido para redes.</p>
+
+      <div class="contact__actions" data-reveal="rise">
+        <a class="btn btn--solid" href={c.whatsappUrl} target="_blank" rel="noopener" data-magnetic>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4.5 19.5 5.6 16A7.8 7.8 0 1 1 8.3 18.6z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path><path d="M9.3 9.2c.2 2.3 2.2 4.4 4.6 4.8l.9-1.1 1.8.8c-.2 1.1-1.1 1.8-2.2 1.7-3.2-.3-6.2-3.3-6.4-6.5 0-1.1.6-2 1.7-2.2l.8 1.8z" fill="currentColor"></path></svg>
+          Escríbeme por WhatsApp
+        </a>
+        <a class="btn glass" href={`mailto:${c.email}`}>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="2.5" stroke="currentColor" stroke-width="1.6"></rect><path d="m4.5 7 7.5 6 7.5-6" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path></svg>
+          Enviar un correo
+        </a>
+      </div>
+
+      <dl class="contact__list" data-reveal="fade">
+        <div><dt class="meta">WhatsApp</dt><dd><a href={c.whatsappUrl} target="_blank" rel="noopener">{c.whatsappDisplay}</a></dd></div>
+        <div><dt class="meta">Correo</dt><dd><a href={`mailto:${c.email}`}>{c.email}</a></dd></div>
+        <div><dt class="meta">Instagram</dt><dd><a href={c.instagramUrl} target="_blank" rel="noopener">@{c.instagram}</a></dd></div>
+        <div><dt class="meta">Base</dt><dd>{profile.place}</dd></div>
+      </dl>
+    </div>
+
+    <div class="contact__chibi" aria-hidden="true">
+      <ChibiLine />
+    </div>
+  </div>
+
+  <footer class="footer wrap">
+    <a href="#inicio" class="footer__brand" aria-label="Volver al inicio"><Wordmark /></a>
+    <p>© {new Date().getFullYear()} {profile.name} · {profile.role}</p>
+    <p class="footer__credit">Logotipo "Menelik" basado en Grandstander (SIL Open Font License 1.1)</p>
+  </footer>
+</section>
+
+<style>
+  .contact {
+    position: relative;
+    padding-top: var(--section-y);
+    overflow: clip;
+  }
+
+  .contact__grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--gutter);
+    align-items: center;
+  }
+
+  .contact__text {
+    grid-column: 1 / span 7;
+    display: grid;
+    gap: 1.6rem;
+    justify-items: start;
+  }
+
+  .contact__eyebrow {
+    color: var(--celeste-700);
+  }
+
+  .contact__title {
+    font-size: var(--step-5);
+    max-width: 10ch;
+  }
+
+  .contact__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 0.6rem;
+  }
+
+  .contact__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, max-content));
+    gap: 1.2rem 3rem;
+    margin-top: 1.5rem;
+  }
+
+  .contact__list dd {
+    margin-top: 0.3rem;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  .contact__list a {
+    text-decoration-color: rgb(31 110 158 / 0.4);
+  }
+  .contact__list a:hover {
+    color: var(--celeste-700);
+  }
+
+  .contact__chibi {
+    grid-column: 8 / span 5;
+    color: var(--profundo-900);
+    max-width: 440px;
+    justify-self: center;
+    width: 100%;
+  }
+
+  .footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.8rem 2rem;
+    margin-top: clamp(4rem, 10vw, 8rem);
+    padding-block: 2rem max(2rem, env(safe-area-inset-bottom));
+    border-top: 1px solid rgb(19 35 44 / 0.14);
+    font-size: 0.85rem;
+    color: var(--tinta-suave);
+  }
+
+  .footer__brand {
+    color: var(--tinta);
+    font-size: 1.6rem;
+    margin-right: auto;
+  }
+
+  .footer__credit {
+    flex-basis: 100%;
+    font-size: 0.75rem;
+    opacity: 0.8;
+  }
+
+  @media (max-width: 899px) {
+    .contact__text,
+    .contact__chibi {
+      grid-column: 1 / -1;
+    }
+    .contact__chibi {
+      max-width: 260px;
+      justify-self: end;
+      margin-top: -1rem;
+    }
+    .contact__list {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

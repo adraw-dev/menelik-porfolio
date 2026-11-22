@@ -1,0 +1,205 @@
+---
+// Fotografía optimizada (AVIF/WebP + srcset) con placeholder desenfocado para el "rack focus".
+// - lightbox: nombre del grupo; envuelve la imagen en un enlace a la versión grande (funciona sin JS).
+// - fit="cover": la foto llena su contenedor respetando el punto focal.
+import { Picture, getImage } from 'astro:assets';
+import type { Photo } from '../../data/photos';
+
+interface Props {
+  photo: Photo;
+  sizes: string;
+  widths?: number[];
+  class?: string;
+  loading?: 'lazy' | 'eager';
+  priority?: boolean;
+  lightbox?: string;
+  caption?: string | boolean;
+  fit?: 'natural' | 'cover';
+  reveal?: boolean;
+  depth?: number;
+  style?: string;
+  /** copia de vista previa: alt vacío y oculta a lectores de pantalla */
+  decorative?: boolean;
+}
+
+const {
+  photo,
+  sizes,
+  widths = [480, 800, 1200, 1600, 2200],
+  class: className,
+  loading = 'lazy',
+  priority = false,
+  lightbox,
+  caption,
+  fit = 'natural',
+  reveal = true,
+  depth,
+  style = '',
+  decorative = false,
+} = Astro.props;
+const alt = decorative ? '' : photo.alt;
+
+const { width: w, height: h } = photo.src;
+const usableWidths = widths.filter((x) => x <= w);
+if (!usableWidths.length) usableWidths.push(w);
+// el src de respaldo se genera al mayor ancho del srcset, no a la resolución original
+const srcWidth = Math.max(...usableWidths);
+
+const lqip = await getImage({ src: photo.src, width: 24, format: 'webp', quality: 40 });
+const full = lightbox ? await getImage({ src: photo.src, width: Math.min(2000, w), format: 'webp', quality: 80 }) : null;
+const captionText = caption === true ? `${photo.title} · ${photo.year}` : caption || '';
+
+const vars = `--ar:${w}/${h};--lqip:url("${lqip.src}");--focal:${photo.focal ?? '50% 50%'};${style}`;
+---
+
+<figure
+  class:list={['photo', `photo--${fit}`, className]}
+  style={vars}
+  data-reveal={reveal ? 'focus' : undefined}
+  data-depth={depth}
+  aria-hidden={decorative ? 'true' : undefined}
+>
+  <div class="photo__frame">
+    {
+      lightbox && full ? (
+        <a
+          class="photo__link"
+          href={full.src}
+          data-lightbox={lightbox}
+          data-caption={captionText || photo.tag}
+          data-alt={alt}
+          data-w={w}
+          data-h={h}
+          aria-label={`Ampliar fotografía: ${photo.alt}`}
+        >
+          <Picture
+            src={photo.src}
+            alt={alt}
+            widths={usableWidths}
+            width={srcWidth}
+            sizes={sizes}
+            formats={['avif']}
+            fallbackFormat="webp"
+            quality={78}
+            loading={priority ? 'eager' : loading}
+            decoding="async"
+            fetchpriority={priority ? 'high' : 'auto'}
+            class="photo__img"
+          />
+          <span class="vf" aria-hidden="true"><i /><i /><i /><i /></span>
+        </a>
+      ) : (
+        <Picture
+          src={photo.src}
+          alt={alt}
+          widths={usableWidths}
+            width={srcWidth}
+          sizes={sizes}
+          formats={['avif']}
+            fallbackFormat="webp"
+          quality={78}
+          loading={priority ? 'eager' : loading}
+          decoding="async"
+          fetchpriority={priority ? 'high' : 'auto'}
+          class="photo__img"
+        />
+      )
+    }
+  </div>
+  {captionText && <figcaption class="photo__cap meta">{captionText}</figcaption>}
+</figure>
+
+<style>
+  .photo {
+    position: relative;
+  }
+
+  .photo__frame {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-print);
+    background: var(--lqip) var(--focal) / cover no-repeat;
+    aspect-ratio: var(--ar);
+    isolation: isolate;
+  }
+
+  /* Placeholder desenfocado: estático (se pinta una vez), el fundido lo hace la imagen nítida. */
+  .photo__frame::before {
+    content: '';
+    position: absolute;
+    inset: -10%;
+    z-index: -1;
+    background: inherit;
+    filter: blur(14px) saturate(1.1);
+  }
+
+  .photo--cover,
+  .photo--cover .photo__frame {
+    height: 100%;
+    aspect-ratio: auto;
+  }
+
+  .photo :global(picture),
+  .photo__link {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .photo :global(.photo__img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--focal);
+  }
+
+  .photo__link {
+    position: relative;
+    cursor: zoom-in;
+    outline-offset: -3px;
+  }
+
+  .photo__cap {
+    margin-top: 0.7rem;
+  }
+
+  /* Esquinas de visor (hover / foco) */
+  .vf {
+    position: absolute;
+    inset: 12px;
+    pointer-events: none;
+  }
+  .vf i {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border: 0 solid var(--relleno);
+    opacity: 0;
+    transition:
+      opacity var(--dur-base) var(--ease-out),
+      transform var(--dur-base) var(--ease-out);
+    filter: drop-shadow(0 0 2px rgb(0 0 0 / 0.35));
+  }
+  .vf i:nth-child(1) { top: 0; left: 0; border-top-width: 2px; border-left-width: 2px; transform: translate(-8px, -8px); }
+  .vf i:nth-child(2) { top: 0; right: 0; border-top-width: 2px; border-right-width: 2px; transform: translate(8px, -8px); }
+  .vf i:nth-child(3) { bottom: 0; left: 0; border-bottom-width: 2px; border-left-width: 2px; transform: translate(-8px, 8px); }
+  .vf i:nth-child(4) { bottom: 0; right: 0; border-bottom-width: 2px; border-right-width: 2px; transform: translate(8px, 8px); }
+
+  .photo__link:focus-visible .vf i {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (hover: hover) {
+    .photo__link:hover .vf i {
+      opacity: 1;
+      transform: none;
+    }
+    .photo__link :global(.photo__img) {
+      transition: transform 900ms var(--ease-out);
+    }
+    .photo__link:hover :global(.photo__img) {
+      transform: scale(1.025);
+    }
+  }
+</style>

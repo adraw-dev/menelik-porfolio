@@ -1,0 +1,49 @@
+:root {
+  /* Paleta — ver PLAN-PORTAFOLIO.md §10.3 */
+  --celeste-300: #a9dcf7;
+  --celeste-500: #6ec1f0;
+  --celeste-700: #1f6e9e;
+  --hielo-100: #e8f4fb;
+  --niebla-50: #f6fafc;
+  --niebla-400: #a7b4bc;
+  --niebla-600: #6f7f88;
+  --profundo-900: #182b35; /* heredado del loader */
+  --profundo-950: #0e1a21;
+  --crema: #f5edde; /* heredado del trazo del loader */
+  --relleno: #faf6f9; /* relleno del loader */
+  --tinta: #13232c;
+  --tinta-suave: #55697a;
+
+  /* Tipografía */
+  --font-display: 'Fraunces Variable', 'Iowan Old Style', Georgia, serif;
+  --font-text: 'Manrope Variable', 'Segoe UI', system-ui, sans-serif;
+
+  --step--1: clamp(0.78rem, 0.76rem + 0.1vw, 0.84rem);
+  --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+  --step-1: clamp(1.2rem, 1.1rem + 0.5vw, 1.5rem);
+  --step-2: clamp(1.5rem, 1.3rem + 1vw, 2.2rem);
+  --step-3: clamp(2.1rem, 1.6rem + 2.4vw, 3.6rem);
+  --step-4: clamp(2.8rem, 2rem + 4.4vw, 6rem);
+  --step-5: clamp(3.6rem, 2.2rem + 8vw, 11rem);
+
+  /* Espaciado y layout */
+  --gutter: clamp(1rem, 0.6rem + 2vw, 2.5rem);
+  --section-y: clamp(5rem, 3rem + 10vh, 11rem);
+  --max: 1440px;
+  --radius-print: 3px;
+  --radius-pill: 999px;
+
+  /* Movimiento (espejo de src/scripts/motion/tokens.ts) */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 180ms;
+  --dur-base: 320ms;
+  --dur-slow: 700ms;
+
+  /* Sombras de "copia impresa", con tinte azul profundo */
+  --shadow-print: 0 1px 2px rgb(14 26 33 / 0.08), 0 12px 30px -10px rgb(14 26 33 / 0.28),
+    0 40px 80px -30px rgb(14 26 33 / 0.35);
+  --shadow-print-dark: 0 1px 2px rgb(0 0 0 / 0.3), 0 24px 60px -20px rgb(0 0 0 / 0.7);
+
+  color-scheme: light;
+}

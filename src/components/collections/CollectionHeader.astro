@@ -1,0 +1,70 @@
+---
+import type { Collection } from '../../data/photos';
+
+interface Props {
+  c: Collection;
+  class?: string;
+}
+const { c, class: className } = Astro.props;
+---
+
+<header class:list={['ch', className]}>
+  <p class="ch__num display" aria-hidden="true" data-reveal="rise">{c.number}</p>
+  <div class="ch__text">
+    <p class="meta ch__kicker" data-reveal="fade">{c.kicker} · {c.years} · {c.photos.length} fotografías</p>
+    <h3 id={`${c.id}-title`} class="display ch__title" data-reveal="lines">{c.title}</h3>
+    <p class="prose ch__desc" data-reveal="fade">{c.text}</p>
+    <button class="chip glass ch__open" type="button" data-open-collection={c.id}>
+      Ver colección completa
+      <svg viewBox="0 0 20 20" width="16" height="16" fill="none" aria-hidden="true"><path d="M4 10h12m0 0-5-5m5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </button>
+  </div>
+</header>
+
+<style>
+  .ch {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: clamp(1rem, 3vw, 3rem);
+    align-items: start;
+  }
+
+  .ch__num {
+    font-size: clamp(3.5rem, 2rem + 6vw, 8.5rem);
+    font-weight: 200;
+    line-height: 0.8;
+    color: var(--celeste-500);
+    font-variation-settings: 'SOFT' 100;
+  }
+
+  .ch__text {
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+  }
+
+  .ch__title {
+    font-size: var(--step-4);
+  }
+
+  .ch__desc {
+    max-width: 44ch;
+  }
+
+  .ch__open {
+    margin-top: 0.4rem;
+    cursor: pointer;
+    border: 1px solid var(--glass-edge);
+  }
+
+  :global(.on-dark) .ch__num {
+    color: var(--celeste-500);
+  }
+
+  :global(html.js) .ch__open {
+    display: inline-flex;
+  }
+  :global(html.no-js) .ch__open {
+    display: none;
+  }
+</style>

@@ -1,0 +1,85 @@
+---
+// 03 · Pueblo — collage 2.5D: impresiones en planos con velocidades distintas.
+import Photo from '../ui/Photo.astro';
+import CollectionHeader from './CollectionHeader.astro';
+import type { Collection } from '../../data/photos';
+
+interface Props { c: Collection }
+const { c } = Astro.props;
+const depths = [0.18, 0.55, 0.3, 0.85, 0.42];
+---
+
+<section id={c.id} class="collage" data-atmos={c.atmos} data-chapter={c.title} aria-labelledby={`${c.id}-title`}>
+  <div class="wrap collage__wrap">
+    <CollectionHeader c={c} class="collage__head" />
+    <div class="collage__field" data-tilt-field>
+      {
+        c.photos.map((p, i) => (
+          <Photo
+            class={`collage__item collage__item--${i + 1}`}
+            photo={p}
+            lightbox={c.id}
+            caption={true}
+            sizes="(min-width: 1024px) 26vw, 46vw"
+            widths={[400, 640, 900, 1200]}
+            depth={depths[i]}
+          />
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .collage {
+    padding-block: var(--section-y);
+    overflow: clip;
+  }
+
+  .collage__wrap {
+    position: relative;
+  }
+
+  .collage__field {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+    margin-top: 3rem;
+  }
+
+  .collage__field :global(.photo__frame) {
+    box-shadow: var(--shadow-print);
+  }
+
+  .collage__field :global(.collage__item--2) { margin-top: 3rem; }
+  .collage__field :global(.collage__item--4) { margin-top: -2rem; }
+  .collage__field :global(.collage__item--5) { grid-column: 1 / -1; width: 72%; margin-inline: auto; }
+
+  @media (min-width: 1024px) {
+    .collage__wrap {
+      min-height: 172vh;
+    }
+    .collage__field {
+      position: absolute;
+      inset: 0;
+      display: block;
+      margin: 0;
+    }
+    .collage__field :global(.collage__item) {
+      position: absolute;
+      margin: 0;
+    }
+    .collage__field :global(.collage__item--1) { width: 30%; top: 0; right: 5%; rotate: 1.5deg; }
+    .collage__field :global(.collage__item--2) { width: 26%; top: 31%; left: 1%; rotate: -2deg; }
+    .collage__field :global(.collage__item--3) { width: 30%; top: 47%; left: 33%; rotate: 0.5deg; z-index: 1; }
+    .collage__field :global(.collage__item--4) { width: 21%; top: 39%; right: 0; rotate: 3deg; z-index: 2; }
+    .collage__field :global(.collage__item--5) { width: 22%; top: 67%; right: 9%; rotate: -1.5deg; z-index: 2; }
+    :global(.collage__head) {
+      position: relative;
+      z-index: 3;
+      max-width: 560px;
+      padding-top: 4vh;
+    }
+  }
+</style>

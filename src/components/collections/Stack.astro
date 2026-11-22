@@ -1,0 +1,166 @@
+---
+// 04 · Altura — stack cinematográfico: marco fijo donde las fotos se suceden a través de la niebla.
+// Sin movimiento (o en móvil) se presenta como una secuencia vertical.
+import Photo from '../ui/Photo.astro';
+import CollectionHeader from './CollectionHeader.astro';
+import type { Collection } from '../../data/photos';
+
+interface Props { c: Collection }
+const { c } = Astro.props;
+---
+
+<section id={c.id} class="stack" data-atmos={c.atmos} data-chapter={c.title} aria-labelledby={`${c.id}-title`} data-stack>
+  <div class="wrap stack__head">
+    <CollectionHeader c={c} />
+  </div>
+
+  <div class="stack__scene" style={`--count:${c.photos.length}`}>
+    <div class="stack__stage">
+      <ol class="stack__captions meta" role="list" aria-hidden="true">
+        {
+          c.photos.map((p, i) => (
+            <li data-stack-caption>
+              <span class="stack__index">{String(i + 1).padStart(2, '0')}</span>
+              {p.title}
+            </li>
+          ))
+        }
+      </ol>
+      <div class="stack__frame">
+        {
+          c.photos.map((p, i) => (
+            <div class="stack__layer" data-stack-layer>
+              <Photo photo={p} lightbox={c.id} caption={true} sizes="(min-width: 1024px) 60vh, 92vw" widths={[480, 720, 960, 1280, 1600]} reveal={false} />
+            </div>
+          ))
+        }
+      </div>
+      <div class="stack__fog" aria-hidden="true" data-stack-fog></div>
+      <p class="stack__counter meta" aria-hidden="true"><span data-stack-current>01</span> / {String(c.photos.length).padStart(2, '0')}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .stack {
+    position: relative;
+    padding-block: var(--section-y);
+  }
+
+  .stack__head {
+    margin-bottom: clamp(2.5rem, 6vw, 5rem);
+  }
+
+  /* Por defecto: secuencia vertical */
+  .stack__stage {
+    position: relative;
+  }
+  .stack__captions,
+  .stack__counter,
+  .stack__fog {
+    display: none;
+  }
+  .stack__frame {
+    display: grid;
+    gap: clamp(2.5rem, 8vw, 6rem);
+    width: min(100% - var(--gutter) * 2, 760px);
+    margin-inline: auto;
+  }
+  .stack__frame :global(.photo__frame) {
+    box-shadow: var(--shadow-print);
+  }
+  .stack__layer:nth-child(even) {
+    width: 86%;
+    margin-left: auto;
+  }
+
+  /* Escritorio con movimiento: escena fijada */
+  @media (min-width: 1024px) {
+    :global(html.has-motion) .stack__scene {
+      height: calc(var(--count) * 85svh + 100svh);
+    }
+    :global(html.has-motion) .stack__stage {
+      position: sticky;
+      top: 0;
+      height: 100svh;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 4vw;
+      overflow: hidden;
+      padding-inline: var(--gutter);
+    }
+    :global(html.has-motion) .stack__frame {
+      position: relative;
+      display: block;
+      grid-column: 2;
+      width: auto;
+      height: 80svh;
+      aspect-ratio: 4 / 5;
+      margin: 0;
+    }
+    :global(html.has-motion) .stack__layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      margin: 0;
+      opacity: 0;
+    }
+    :global(html.has-motion) .stack__layer:first-child {
+      opacity: 1;
+    }
+    :global(html.has-motion) .stack__layer :global(.photo),
+    :global(html.has-motion) .stack__layer :global(.photo__frame) {
+      height: 100%;
+    }
+    :global(html.has-motion) .stack__layer :global(.photo__frame) {
+      aspect-ratio: auto;
+    }
+    /* Respeta la proporción original: las bandas se rellenan con el placeholder desenfocado */
+    :global(html.has-motion) .stack__layer :global(.photo__img) {
+      object-fit: contain;
+    }
+    :global(html.has-motion) .stack__layer :global(.photo__cap) {
+      display: none;
+    }
+    :global(html.has-motion) .stack__captions {
+      grid-column: 1;
+      justify-self: end;
+      display: grid;
+      gap: 0.6rem;
+      text-align: right;
+    }
+    :global(html.has-motion) .stack__captions li {
+      opacity: 0.3;
+      transition: opacity var(--dur-base) var(--ease-out), translate var(--dur-base) var(--ease-out);
+    }
+    :global(html.has-motion) .stack__captions li.is-active {
+      opacity: 1;
+      translate: -6px 0;
+      color: var(--tinta);
+    }
+    .stack__index {
+      margin-right: 0.6rem;
+      color: var(--celeste-700);
+    }
+    :global(html.has-motion) .stack__counter {
+      display: block;
+      grid-column: 3;
+      justify-self: start;
+      font-size: var(--step-1);
+      color: var(--tinta);
+    }
+    :global(html.has-motion) .stack__fog {
+      display: block;
+      position: absolute;
+      inset: -10%;
+      pointer-events: none;
+      opacity: 0;
+      background:
+        radial-gradient(60% 40% at 30% 55%, rgb(236 240 242 / 0.95), transparent 70%),
+        radial-gradient(50% 45% at 70% 45%, rgb(225 231 234 / 0.9), transparent 70%),
+        radial-gradient(80% 60% at 50% 50%, rgb(214 222 226 / 0.75), transparent 75%);
+      will-change: opacity, transform;
+    }
+  }
+</style>

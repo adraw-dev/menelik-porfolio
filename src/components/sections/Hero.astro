@@ -1,0 +1,226 @@
+---
+import Photo from '../ui/Photo.astro';
+import { P } from '../../data/photos';
+import { profile } from '../../data/profile';
+---
+
+<section id="inicio" class="hero" data-atmos="dawn" data-chapter="Portada" aria-labelledby="hero-title">
+  <div class="hero__stage" data-hero>
+    <div class="hero__bg" data-hero-bg>
+      <Photo
+        photo={P.niebla}
+        fit="cover"
+        priority
+        reveal={false}
+        sizes="100vw"
+        widths={[640, 960, 1280, 1600, 2000, 2560]}
+      />
+    </div>
+    <div class="hero__veil" aria-hidden="true"></div>
+
+    <div class="hero__prints">
+      <Photo class="print print--a" photo={P.globos} decorative reveal={false} sizes="(min-width: 900px) 21vw, 42vw" widths={[400, 640, 900]} depth={0.9} />
+      <Photo class="print print--b" photo={P.motera} decorative reveal={false} sizes="(min-width: 900px) 15vw, 30vw" widths={[320, 480, 720]} depth={0.6} />
+      <Photo class="print print--c" photo={P.cantanteBN} decorative reveal={false} sizes="(min-width: 900px) 13vw, 28vw" widths={[320, 480, 720]} depth={1.2} />
+    </div>
+
+    <div class="hero__copy wrap">
+      <p class="eyebrow hero__eyebrow" data-hero-fade>{profile.role} · {profile.place}</p>
+      <h1 id="hero-title" class="display hero__title">
+        <span class="mask"><span class="hero__line" data-hero-line>Menelik</span></span>{' '}
+        <span class="mask"><em class="hero__line" data-hero-line>Puerta Herrera</em></span>
+      </h1>
+      <p class="lede hero__lede" data-hero-fade>Momentos espontáneos, cuidados en cada detalle.</p>
+      <div class="hero__actions" data-hero-fade>
+        <a class="btn glass" href="#trabajo" data-magnetic>
+          Ver trabajo
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4v12m0 0-5-5m5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </a>
+        <a class="hero__link" href="#contacto">Escríbeme</a>
+      </div>
+    </div>
+
+    <p class="hero__exif meta" data-hero-fade aria-hidden="true">Altura · Páramo · 2025</p>
+    <p class="hero__cue meta" data-hero-fade aria-hidden="true"><span>Desliza</span><i></i></p>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    height: 100svh;
+    min-height: 560px;
+  }
+
+  :global(html.has-motion) .hero {
+    height: 185svh;
+  }
+
+  @media (max-width: 899px) {
+    :global(html.has-motion) .hero {
+      height: 150svh;
+    }
+  }
+
+  .hero__stage {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    min-height: 560px;
+    overflow: hidden;
+  }
+
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    will-change: transform;
+  }
+
+  .hero__bg :global(.photo) {
+    height: 100%;
+  }
+  .hero__bg :global(.photo__frame) {
+    border-radius: 0;
+  }
+
+  .hero__veil {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(100deg, rgb(232 244 251 / 0.78) 0%, rgb(232 244 251 / 0.35) 38%, rgb(232 244 251 / 0) 62%),
+      linear-gradient(0deg, rgb(246 250 252 / 0.55) 0%, rgb(246 250 252 / 0) 26%);
+    pointer-events: none;
+  }
+
+  /* Impresiones flotantes (plano medio) */
+  .hero__prints :global(.print) {
+    position: absolute;
+    z-index: 2;
+    will-change: transform;
+  }
+  .hero__prints :global(.print .photo__frame) {
+    box-shadow: var(--shadow-print);
+  }
+  .hero__prints :global(.print--a) {
+    width: clamp(150px, 21vw, 360px);
+    top: 14%;
+    right: 7%;
+    rotate: 2.5deg;
+  }
+  .hero__prints :global(.print--b) {
+    width: clamp(110px, 14vw, 240px);
+    bottom: 7%;
+    left: 37%;
+    rotate: -3deg;
+  }
+  .hero__prints :global(.print--c) {
+    width: clamp(96px, 12.5vw, 210px);
+    bottom: 13%;
+    right: 9%;
+    rotate: 4deg;
+  }
+
+  .hero__copy {
+    position: relative;
+    z-index: 3;
+    display: grid;
+    align-content: center;
+    gap: 1.4rem;
+    height: 100%;
+    padding-top: 4rem;
+  }
+
+  .hero__eyebrow {
+    color: var(--celeste-700);
+  }
+
+  .hero__title {
+    font-size: var(--step-5);
+    color: var(--tinta);
+  }
+
+  .hero__title em {
+    display: block;
+    padding-left: 0.6em;
+    font-size: 0.62em;
+    color: var(--profundo-900);
+  }
+
+  .hero__line {
+    display: inline-block;
+  }
+
+  .hero__lede {
+    max-width: 26ch;
+    color: var(--tinta);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.25rem;
+    margin-top: 0.5rem;
+  }
+
+  .hero__link {
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.6rem 0.2rem;
+  }
+
+  .hero__exif {
+    position: absolute;
+    z-index: 3;
+    left: var(--gutter);
+    bottom: 1.5rem;
+    color: var(--tinta);
+  }
+
+  .hero__cue {
+    position: absolute;
+    z-index: 3;
+    right: var(--gutter);
+    bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    color: var(--tinta);
+  }
+  .hero__cue i {
+    width: 44px;
+    height: 1px;
+    background: currentColor;
+    transform-origin: left;
+    animation: cue 2.4s var(--ease-in-out) infinite;
+  }
+  @keyframes cue {
+    0% { transform: scaleX(0); }
+    50% { transform: scaleX(1); transform-origin: left; }
+    51% { transform-origin: right; }
+    100% { transform: scaleX(0); transform-origin: right; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__cue i { animation: none; }
+  }
+
+  @media (max-width: 899px) {
+    .hero__bg :global(.photo__img) {
+      object-position: 58% 50%;
+    }
+    .hero__veil {
+      background:
+        linear-gradient(180deg, rgb(232 244 251 / 0.82) 0%, rgb(232 244 251 / 0.5) 40%, rgb(232 244 251 / 0) 62%),
+        linear-gradient(0deg, rgb(246 250 252 / 0.6) 0%, rgb(246 250 252 / 0) 30%);
+    }
+    .hero__copy {
+      align-content: start;
+      padding-top: 7.5rem;
+    }
+    .hero__prints :global(.print--a) { top: auto; bottom: 22%; right: 5%; }
+    .hero__prints :global(.print--b) { left: auto; right: 44%; bottom: 8%; }
+    .hero__prints :global(.print--c) { display: none; }
+    .hero__exif { display: none; }
+  }
+</style>
