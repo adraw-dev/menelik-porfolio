@@ -31,7 +31,9 @@ const profile = getProfile(lang);
     </div>
 
     <div class="hero__copy wrap">
-      <p class="eyebrow hero__eyebrow" data-hero-fade>{profile.role} · {profile.place}</p>
+      <p class="eyebrow hero__eyebrow" data-hero-fade>
+        <span>{profile.role}</span><span class="hero__sep" aria-hidden="true"> · </span><span class="hero__place">{profile.place}</span>
+      </p>
       <h1 id="hero-title" class="display hero__title">
         <span class="mask"><span class="hero__line" data-hero-line>Menelik</span></span>{' '}
         <span class="mask"><em class="hero__line" data-hero-line>Puerta Herrera</em></span>
@@ -211,22 +213,92 @@ const profile = getProfile(lang);
     .hero__cue i { animation: none; }
   }
 
+  /* ---------- Móvil y tablet vertical ----------
+     Tres franjas: texto arriba · la figura del páramo despejada al centro ·
+     las tres copias en abanico abajo, sobre el suelo vacío de la foto.
+     Las medidas combinan vw y svh para que funcione también en pantallas bajas. */
   @media (max-width: 899px) {
     .hero__bg :global(.photo__img) {
       object-position: 58% 50%;
     }
     .hero__veil {
       background:
-        linear-gradient(180deg, rgb(232 244 251 / 0.82) 0%, rgb(232 244 251 / 0.5) 40%, rgb(232 244 251 / 0) 62%),
-        linear-gradient(0deg, rgb(246 250 252 / 0.6) 0%, rgb(246 250 252 / 0) 30%);
+        linear-gradient(180deg, rgb(232 244 251 / 0.9) 0%, rgb(232 244 251 / 0.7) 32%, rgb(232 244 251 / 0) 56%),
+        linear-gradient(0deg, rgb(232 244 251 / 0.55) 0%, rgb(232 244 251 / 0) 24%);
     }
     .hero__copy {
       align-content: start;
-      padding-top: 7.5rem;
+      gap: clamp(0.8rem, 2.2svh, 1.3rem);
+      padding-top: calc(max(env(safe-area-inset-top), 0px) + clamp(4.75rem, 11svh, 6.5rem));
     }
-    .hero__prints :global(.print--a) { top: auto; bottom: 22%; right: 5%; }
-    .hero__prints :global(.print--b) { left: auto; right: 44%; bottom: 8%; }
-    .hero__prints :global(.print--c) { display: none; }
-    .hero__exif { display: none; }
+    .hero__eyebrow {
+      display: grid;
+      gap: 0.25rem;
+    }
+    .hero__sep {
+      display: none;
+    }
+    .hero__title {
+      font-size: min(21vw, 10.5svh);
+      line-height: 0.88;
+    }
+    .hero__title em {
+      padding-left: 0.5em;
+      font-size: 0.46em;
+      margin-top: 0.12em;
+    }
+    .hero__lede {
+      max-width: 22ch;
+      font-size: clamp(1.05rem, 0.9rem + 1vw, 1.25rem);
+    }
+    .hero__actions {
+      gap: 1rem;
+      margin-top: 0.25rem;
+    }
+
+    /* Abanico de copias en la franja inferior */
+    .hero__prints :global(.print--a),
+    .hero__prints :global(.print--b),
+    .hero__prints :global(.print--c) {
+      top: auto;
+      right: auto;
+      display: block;
+    }
+    .hero__prints :global(.print--b) {
+      left: 5%;
+      bottom: 4.5svh;
+      width: min(30vw, 18svh);
+      rotate: -6deg;
+      z-index: 2;
+    }
+    .hero__prints :global(.print--c) {
+      left: 31%;
+      bottom: 9svh;
+      width: min(25vw, 15svh);
+      rotate: 3deg;
+      z-index: 1;
+    }
+    .hero__prints :global(.print--a) {
+      left: auto;
+      right: 5%;
+      bottom: 6svh;
+      width: min(42vw, 25svh);
+      rotate: -2deg;
+      z-index: 3;
+    }
+    .hero__exif,
+    .hero__cue {
+      display: none;
+    }
+  }
+
+  /* Tablet en vertical: más aire, mismo esquema */
+  @media (min-width: 600px) and (max-width: 899px) {
+    .hero__title {
+      font-size: min(15vw, 10svh);
+    }
+    .hero__prints :global(.print--b) { left: 8%; }
+    .hero__prints :global(.print--c) { left: 33%; }
+    .hero__prints :global(.print--a) { right: 8%; }
   }
 </style>
