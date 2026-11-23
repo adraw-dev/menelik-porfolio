@@ -9,6 +9,7 @@ import { initReveals } from './reveal';
 import { initParallax } from './parallax';
 import { initAtmosphere } from './atmosphere';
 import { initPointer } from './pointer';
+import { initSmoothAnchors } from './anchors';
 import { heroScroll, heroIntroSetup, stripScroll, stackScroll, awardScroll, processLine, chibiDraw } from './scenes';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
@@ -37,14 +38,14 @@ export function initMotion() {
     chibiDraw();
     awardScroll();
     processLine(!desktop && innerWidth < 768);
-    if (desktop) {
-      stripScroll();
-      stackScroll();
-    }
+    stackScroll(); // el stack de Altura funciona en todas las pantallas
+    if (desktop) stripScroll();
+    const stopAnchors = initSmoothAnchors();
     const stopPointer = desktop && fine ? initPointer() : null;
 
     return () => {
       stopPointer?.();
+      stopAnchors();
       html.classList.remove('has-motion', 'has-atmos');
     };
   });
