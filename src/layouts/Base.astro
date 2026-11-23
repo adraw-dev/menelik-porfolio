@@ -6,20 +6,22 @@ import '../styles/tokens.css';
 import '../styles/base.css';
 import '../styles/type.css';
 import '../styles/glass.css';
-import { profile } from '../data/profile';
+import { getProfile } from '../data/profile';
+import { getLang, t, LANGS, homePath } from '../i18n';
 
 interface Props {
   title?: string;
   description?: string;
 }
 
-const {
-  title = `${profile.name} — ${profile.role}`,
-  description = `Portafolio de ${profile.name}, ${profile.role.toLowerCase()} en ${profile.place}. Eventos, celebraciones familiares, retratos y contenido visual para redes.`,
-} = Astro.props;
+const lang = getLang(Astro.currentLocale);
+const ui = t(lang);
+const profile = getProfile(lang);
+const { title = ui.meta.title, description = ui.meta.description } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const og = new URL('/og.jpg', Astro.site);
+const alternates = LANGS.map((l) => ({ lang: l, href: new URL(homePath(l), Astro.site) }));
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -27,26 +29,28 @@ const jsonLd = {
   name: profile.name,
   jobTitle: profile.role,
   email: `mailto:${profile.contact.email}`,
-  telephone: profile.contact.whatsappDisplay.replace(/\s/g, ''),
+  telephone: `+${profile.contact.phone}`,
   address: { '@type': 'PostalAddress', addressLocality: 'Itagüí', addressCountry: 'CO' },
   sameAs: [profile.contact.instagramUrl],
 };
 ---
 
 <!doctype html>
-<html lang="es" class="no-js">
+<html lang={lang} class="no-js">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {alternates.map((a) => <link rel="alternate" hreflang={a.lang} href={a.href} />)}
+    <link rel="alternate" hreflang="x-default" href={new URL('/', Astro.site)} />
     <meta name="theme-color" content="#182B35" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" href="/favicon-180.png" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content="es_CO" />
+    <meta property="og:locale" content={ui.meta.ogLocale} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={og} />

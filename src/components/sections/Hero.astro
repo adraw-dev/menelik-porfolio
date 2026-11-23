@@ -1,10 +1,16 @@
 ---
 import Photo from '../ui/Photo.astro';
-import { P } from '../../data/photos';
-import { profile } from '../../data/profile';
+import { getPhotos } from '../../data/photos';
+import { getProfile } from '../../data/profile';
+import { getLang, t } from '../../i18n';
+
+const lang = getLang(Astro.currentLocale);
+const ui = t(lang);
+const P = getPhotos(lang);
+const profile = getProfile(lang);
 ---
 
-<section id="inicio" class="hero" data-atmos="dawn" data-chapter="Portada" aria-labelledby="hero-title">
+<section id="inicio" class="hero" data-atmos="dawn" data-chapter={ui.chapters.inicio} aria-labelledby="hero-title">
   <div class="hero__stage" data-hero>
     <div class="hero__bg" data-hero-bg>
       <Photo
@@ -30,18 +36,18 @@ import { profile } from '../../data/profile';
         <span class="mask"><span class="hero__line" data-hero-line>Menelik</span></span>{' '}
         <span class="mask"><em class="hero__line" data-hero-line>Puerta Herrera</em></span>
       </h1>
-      <p class="lede hero__lede" data-hero-fade>Momentos espontáneos, cuidados en cada detalle.</p>
+      <p class="lede hero__lede" data-hero-fade>{ui.hero.lede}</p>
       <div class="hero__actions" data-hero-fade>
         <a class="btn glass" href="#trabajo" data-magnetic>
-          Ver trabajo
+          {ui.hero.view}
           <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4v12m0 0-5-5m5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
         </a>
-        <a class="hero__link" href="#contacto">Escríbeme</a>
+        <a class="hero__link" href="#contacto">{ui.hero.write}</a>
       </div>
     </div>
 
-    <p class="hero__exif meta" data-hero-fade aria-hidden="true">Altura · Páramo · 2025</p>
-    <p class="hero__cue meta" data-hero-fade aria-hidden="true"><span>Desliza</span><i></i></p>
+    <p class="hero__exif meta" data-hero-fade aria-hidden="true">{ui.hero.exif}</p>
+    <p class="hero__cue meta" data-hero-fade aria-hidden="true"><span>{ui.hero.cue}</span><i></i></p>
   </div>
 </section>
 

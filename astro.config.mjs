@@ -13,6 +13,12 @@ const site =
 export default defineConfig({
   site,
   output: 'static',
+  // Español en /, inglés en /en/
+  i18n: {
+    locales: ['es', 'en'],
+    defaultLocale: 'es',
+    routing: { prefixDefaultLocale: false },
+  },
   image: {
     // Los originales pesan hasta 22 MB / 6000 px; se permiten píxeles altos al procesar.
     service: { entrypoint: 'astro/assets/services/sharp', config: { limitInputPixels: false } },

@@ -4,6 +4,7 @@
 // - fit="cover": la foto llena su contenedor respetando el punto focal.
 import { Picture, getImage } from 'astro:assets';
 import type { Photo } from '../../data/photos';
+import { getLang, t } from '../../i18n';
 
 interface Props {
   photo: Photo;
@@ -38,6 +39,7 @@ const {
   decorative = false,
 } = Astro.props;
 const alt = decorative ? '' : photo.alt;
+const ui = t(getLang(Astro.currentLocale));
 
 const { width: w, height: h } = photo.src;
 const usableWidths = widths.filter((x) => x <= w);
@@ -70,7 +72,7 @@ const vars = `--ar:${w}/${h};--lqip:url("${lqip.src}");--focal:${photo.focal ?? 
           data-alt={alt}
           data-w={w}
           data-h={h}
-          aria-label={`Ampliar fotografía: ${photo.alt}`}
+          aria-label={`${ui.lightbox.enlarge}: ${photo.alt}`}
         >
           <Picture
             src={photo.src}

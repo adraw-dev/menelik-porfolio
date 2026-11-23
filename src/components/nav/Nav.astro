@@ -1,37 +1,53 @@
 ---
 import Wordmark from '../ui/Wordmark.astro';
+import { getLang, t, otherLang, homePath } from '../../i18n';
 
-const links = [
-  { href: '#sobre', label: 'Sobre mí' },
-  { href: '#trabajo', label: 'Trabajo' },
-  { href: '#video', label: 'Video' },
-  { href: '#servicios', label: 'Servicios' },
-  { href: '#contacto', label: 'Contacto' },
-];
+const lang = getLang(Astro.currentLocale);
+const ui = t(lang);
+const other = otherLang(lang);
+const ids = ['sobre', 'trabajo', 'video', 'servicios', 'contacto'] as const;
+const links = ids.map((id) => ({ href: `#${id}`, label: ui.nav.links[id] }));
 ---
 
 <header class="nav" data-nav>
-  <a class="nav__brand" href="#inicio" aria-label="Menelik Puerta, volver al inicio">
+  <a class="nav__brand" href="#inicio" aria-label={ui.nav.home}>
     <Wordmark class="nav__logo" />
   </a>
 
-  <nav class="nav__pill glass" aria-label="Principal">
+  <nav class="nav__pill glass" aria-label={ui.nav.main}>
     <ul role="list">
       {links.map((l) => <li><a href={l.href} data-nav-link>{l.label}</a></li>)}
     </ul>
   </nav>
 
-  <a class="btn btn--solid nav__cta" href="#contacto">Hablemos</a>
-
-  <button class="nav__toggle glass" type="button" aria-expanded="false" aria-controls="menu" data-menu-toggle>
-    <span class="nav__toggle-label">Menú</span>
-    <span class="nav__burger" aria-hidden="true"><i></i><i></i></span>
-  </button>
+  <div class="nav__end">
+    <a
+      class="nav__lang glass"
+      href={homePath(other)}
+      hreflang={other}
+      lang={other}
+      aria-label={ui.nav.switchLabel}
+      data-lang-switch={homePath(other)}
+    >{ui.nav.switchShort}</a>
+    <a class="btn btn--solid nav__cta" href="#contacto">{ui.nav.cta}</a>
+    <button
+      class="nav__toggle glass"
+      type="button"
+      aria-expanded="false"
+      aria-controls="menu"
+      data-menu-toggle
+      data-label-open={ui.nav.menu}
+      data-label-close={ui.nav.close}
+    >
+      <span class="nav__toggle-label">{ui.nav.menu}</span>
+      <span class="nav__burger" aria-hidden="true"><i></i><i></i></span>
+    </button>
+  </div>
   <span class="nav__progress" aria-hidden="true"><i data-progress-bar></i></span>
 </header>
 
 <div id="menu" class="menu on-dark" data-menu hidden>
-  <nav aria-label="Menú móvil">
+  <nav aria-label={ui.nav.mobile}>
     <ol role="list" class="menu__list">
       {
         links.map((l, i) => (
@@ -120,8 +136,39 @@ const links = [
     }
   }
 
-  .nav__cta {
+  .nav__end {
     justify-self: end;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .nav__lang {
+    display: inline-grid;
+    place-items: center;
+    min-width: 44px;
+    height: 44px;
+    padding: 0 0.8rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    transition: background-color var(--dur-base) var(--ease-out);
+  }
+
+  :global(html[data-zone='dark']) .nav__lang {
+    --glass-fill: rgb(24 43 53 / 0.45);
+    --glass-edge: rgb(169 220 247 / 0.22);
+  }
+
+  @media (hover: hover) {
+    .nav__lang:hover {
+      --glass-fill: rgb(246 250 252 / 0.72);
+    }
+  }
+
+  .nav__cta {
     min-height: 44px;
     padding-block: 0.6em;
   }
@@ -133,7 +180,6 @@ const links = [
 
   .nav__toggle {
     display: none;
-    justify-self: end;
     align-items: center;
     gap: 0.7rem;
     min-height: 44px;
@@ -179,6 +225,9 @@ const links = [
     .nav__pill,
     .nav__cta {
       display: none;
+    }
+    .nav__end {
+      grid-column: 2;
     }
     .nav__toggle {
       display: inline-flex;

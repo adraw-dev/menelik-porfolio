@@ -1,0 +1,55 @@
+---
+import Base from '../layouts/Base.astro';
+import Loader from './loader/Loader.astro';
+import Nav from './nav/Nav.astro';
+import ProgressRail from './nav/ProgressRail.astro';
+import Atmosphere from './ui/Atmosphere.astro';
+import Hero from './sections/Hero.astro';
+import About from './sections/About.astro';
+import WorkIntro from './sections/WorkIntro.astro';
+import Album from './collections/Album.astro';
+import Strip from './collections/Strip.astro';
+import Collage from './collections/Collage.astro';
+import Stack from './collections/Stack.astro';
+import ContactSheet from './collections/ContactSheet.astro';
+import Award from './sections/Award.astro';
+import Reels from './sections/Reels.astro';
+import Services from './sections/Services.astro';
+import Contact from './sections/Contact.astro';
+import Lightbox from './lightbox/Lightbox.astro';
+import { getCollections } from '../data/photos';
+import { getLang, t } from '../i18n';
+
+const lang = getLang(Astro.currentLocale);
+const ui = t(lang);
+const [celebraciones, ruta, pueblo, altura, escena] = getCollections(lang);
+---
+
+<Base>
+  <a class="skip-link" href="#contenido">{ui.skip}</a>
+  <Loader />
+  <Atmosphere />
+  <Nav />
+  <ProgressRail />
+
+  <main id="contenido">
+    <Hero />
+    <About />
+    <WorkIntro />
+    <Album c={celebraciones} />
+    <Strip c={ruta} />
+    <Collage c={pueblo} />
+    <Stack c={altura} />
+    <ContactSheet c={escena} />
+    <Award />
+    <Reels />
+    <Services />
+    <Contact />
+  </main>
+
+  <Lightbox />
+</Base>
+
+<script>
+  import '../scripts/main';
+</script>

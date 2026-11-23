@@ -3,6 +3,11 @@
 import Photo from '../ui/Photo.astro';
 import CollectionHeader from './CollectionHeader.astro';
 import type { Collection } from '../../data/photos';
+import { getLang, t } from '../../i18n';
+
+const lang = getLang(Astro.currentLocale);
+const ui = t(lang);
+
 
 interface Props { c: Collection }
 const { c } = Astro.props;
@@ -13,7 +18,7 @@ const { c } = Astro.props;
     <div class="strip__track" data-strip-track>
       <div class="strip__intro">
         <CollectionHeader c={c} />
-        <p class="meta strip__hint" aria-hidden="true">Sigue bajando — la carretera avanza →</p>
+        <p class="meta strip__hint" aria-hidden="true">{ui.work.stripHint}</p>
       </div>
       {
         c.photos.map((p, i) => (

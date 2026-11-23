@@ -37,7 +37,10 @@ export function initEmbeds() {
     const url = card.dataset.embed!;
     title.textContent = card.dataset.embedTitle || 'Instagram';
     link.href = url;
-    body.innerHTML = '<p class="embed__loading meta">Cargando desde Instagram…</p>';
+    const loading = document.createElement('p');
+    loading.className = 'embed__loading meta';
+    loading.textContent = dialog.dataset.loading || '';
+    body.replaceChildren(loading);
     html.classList.add('is-locked');
     dialog.showModal();
 
@@ -51,7 +54,15 @@ export function initEmbeds() {
       body.replaceChildren(q);
       window.instgrm?.Embeds.process();
     } catch {
-      body.innerHTML = `<p class="embed__loading meta">No se pudo cargar la vista previa. <a href="${url}" target="_blank" rel="noopener">Ver en Instagram ↗</a></p>`;
+      const p = document.createElement('p');
+      p.className = 'embed__loading meta';
+      const a = document.createElement('a');
+      a.href = url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.textContent = dialog.dataset.errorLink || 'Instagram ↗';
+      p.append(`${dialog.dataset.error || ''} `, a);
+      body.replaceChildren(p);
     }
   });
 

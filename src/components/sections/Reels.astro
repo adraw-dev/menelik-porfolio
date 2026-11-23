@@ -1,22 +1,25 @@
 ---
 // Trabajo audiovisual (rol: edición). Las piezas viven en cuentas de clientes: se muestran como
 // pósters tipográficos y el embed de Instagram se carga solo al pedirlo (patrón facade).
-import { reels } from '../../data/reels';
+import { getReels } from '../../data/reels';
+import { getLang, t } from '../../i18n';
+
+const lang = getLang(Astro.currentLocale);
+const ui = t(lang);
+const reels = getReels(lang);
 ---
 
-<section id="video" class="reels on-dark" data-atmos="night" data-chapter="Video" aria-labelledby="reels-title">
+<section id="video" class="reels on-dark" data-atmos="night" data-chapter={ui.chapters.video} aria-labelledby="reels-title">
   <div class="wrap reels__head">
-    <p class="eyebrow reels__eyebrow">03 — En movimiento</p>
-    <h2 id="reels-title" class="display h2" data-reveal="lines">Edición para <em>redes</em></h2>
-    <p class="lede" data-reveal="fade">
-      Reels verticales editados en CapCut y selección y retoque fotográfico para carruseles de Instagram.
-    </p>
+    <p class="eyebrow reels__eyebrow">{ui.reels.eyebrow}</p>
+    <h2 id="reels-title" class="display h2" data-reveal="lines" set:html={ui.reels.title} />
+    <p class="lede" data-reveal="fade">{ui.reels.lede}</p>
   </div>
 
   <ul class="reels__list" role="list" data-tilt-field>
     {
       reels.map((r, i) => (
-        <li class:list={['reel', r.kind === 'Carrusel' && 'reel--carousel']} style={`--a:${r.tone[0]};--b:${r.tone[1]}`} data-depth={0.15 + (i % 3) * 0.18}>
+        <li class:list={['reel', r.isCarousel && 'reel--carousel']} style={`--a:${r.tone[0]};--b:${r.tone[1]}`} data-depth={0.15 + (i % 3) * 0.18}>
           <a
             class="reel__card"
             href={r.url}
@@ -27,7 +30,7 @@ import { reels } from '../../data/reels';
             data-tilt
           >
             <span class="reel__top">
-              <span class="meta">{r.kind} · Edición</span>
+              <span class="meta">{r.kind} · {ui.reels.role}</span>
               <span class="reel__ig" aria-hidden="true">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.6"></rect><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"></circle><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor"></circle></svg>
               </span>
@@ -42,7 +45,7 @@ import { reels } from '../../data/reels';
                 <span class="meta">{r.date}</span>
               </span>
             </span>
-            <span class="sr-only">(abre la publicación de Instagram)</span>
+            <span class="sr-only">{ui.reels.opens}</span>
           </a>
         </li>
       ))
@@ -50,11 +53,11 @@ import { reels } from '../../data/reels';
   </ul>
 </section>
 
-<dialog class="embed on-dark" data-embed-dialog aria-labelledby="embed-title">
+<dialog class="embed on-dark" data-embed-dialog aria-labelledby="embed-title" data-loading={ui.reels.loading} data-error={ui.reels.error} data-error-link={ui.reels.errorLink}>
   <div class="embed__bar">
     <p id="embed-title" class="meta" data-embed-dialog-title>Instagram</p>
-    <a class="chip glass" href="#" target="_blank" rel="noopener" data-embed-dialog-link>Abrir en Instagram ↗</a>
-    <button class="embed__close glass" type="button" data-embed-close aria-label="Cerrar">
+    <a class="chip glass" href="#" target="_blank" rel="noopener" data-embed-dialog-link>{ui.reels.open}</a>
+    <button class="embed__close glass" type="button" data-embed-close aria-label={ui.reels.close}>
       <svg viewBox="0 0 20 20" width="18" height="18" fill="none" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg>
     </button>
   </div>

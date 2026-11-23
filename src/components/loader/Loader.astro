@@ -6,6 +6,11 @@
 // "Menelik" usa contornos derivados de Grandstander, Copyright 2020 The Grandstander Project Authors,
 // bajo SIL Open Font License 1.1.
 import { loaderSvg } from '../../lib/loader-source';
+import { getLang, t } from '../../i18n';
+
+const lang = getLang(Astro.currentLocale);
+const ui = t(lang);
+
 ---
 
 <div class="loader" data-loader>
@@ -13,8 +18,8 @@ import { loaderSvg } from '../../lib/loader-source';
   <div class="loader__stage" data-loader-stage aria-hidden="true">
     <Fragment set:html={loaderSvg} />
   </div>
-  <button class="loader__skip" type="button" data-loader-skip>Saltar intro</button>
-  <p class="sr-only" role="status">Cargando el portafolio de Menelik Puerta</p>
+  <button class="loader__skip" type="button" data-loader-skip>{ui.loader.skip}</button>
+  <p class="sr-only" role="status">{ui.loader.status}</p>
 </div>
 
 <style>

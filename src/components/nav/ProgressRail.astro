@@ -1,9 +1,11 @@
 ---
+import { getLang, t } from '../../i18n';
+const ui = t(getLang(Astro.currentLocale));
 // Riel lateral de capítulos (escritorio). Los capítulos se leen de [data-chapter] en tiempo de ejecución
 // para no duplicar la lista; aquí solo se define el contenedor.
 ---
 
-<nav class="rail" aria-label="Capítulos" data-rail>
+<nav class="rail" aria-label={ui.nav.rail} data-rail>
   <ol role="list" class="rail__list" data-rail-list></ol>
   <p class="rail__count meta" aria-hidden="true"><span data-rail-current>01</span> / <span data-rail-total>01</span></p>
 </nav>

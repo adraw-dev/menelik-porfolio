@@ -1,17 +1,20 @@
 ---
-import { collections } from '../../data/photos';
+import { getCollections } from '../../data/photos';
+import { getLang, t } from '../../i18n';
+
+const lang = getLang(Astro.currentLocale);
+const ui = t(lang);
+const collections = getCollections(lang);
 ---
 
-<section id="trabajo" class="work" data-atmos="day" data-chapter="Trabajo" aria-labelledby="work-title">
+<section id="trabajo" class="work" data-atmos="day" data-chapter={ui.chapters.trabajo} aria-labelledby="work-title">
   <div class="wrap work__head">
-    <p class="eyebrow work__eyebrow">02 — Trabajo seleccionado</p>
-    <h2 id="work-title" class="display h2" data-reveal="lines">Del celeste <em>a la noche</em></h2>
-    <p class="lede" data-reveal="fade">
-      Cinco colecciones ordenadas como un día de luz: de las celebraciones a la carretera, del pueblo al páramo y al escenario.
-    </p>
+    <p class="eyebrow work__eyebrow">{ui.work.eyebrow}</p>
+    <h2 id="work-title" class="display h2" data-reveal="lines" set:html={ui.work.title} />
+    <p class="lede" data-reveal="fade">{ui.work.lede}</p>
   </div>
 
-  <nav class="wrap work__index" aria-label="Colecciones">
+  <nav class="wrap work__index" aria-label={ui.work.index}>
     <ol role="list">
       {
         collections.map((c) => (
@@ -19,7 +22,7 @@ import { collections } from '../../data/photos';
             <a class="chip glass" href={`#${c.id}`} data-collection-link={c.id}>
               <span class="work__n">{c.number}</span>
               {c.title}
-              <span class="work__count" aria-label={`${c.photos.length} fotografías`}>{c.photos.length}</span>
+              <span class="work__count" aria-label={ui.work.photos(c.photos.length)}>{c.photos.length}</span>
             </a>
           </li>
         ))

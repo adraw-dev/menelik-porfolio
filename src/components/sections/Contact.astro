@@ -1,35 +1,38 @@
 ---
 import ChibiLine from '../ui/ChibiLine.astro';
 import Wordmark from '../ui/Wordmark.astro';
-import { profile } from '../../data/profile';
+import { getProfile } from '../../data/profile';
+import { getLang, t } from '../../i18n';
+
+const lang = getLang(Astro.currentLocale);
+const ui = t(lang);
+const profile = getProfile(lang);
 const c = profile.contact;
 ---
 
-<section id="contacto" class="contact" data-atmos="dawn" data-chapter="Contacto" aria-labelledby="contact-title">
+<section id="contacto" class="contact" data-atmos="dawn" data-chapter={ui.chapters.contacto} aria-labelledby="contact-title">
   <div class="wrap contact__grid">
     <div class="contact__text">
-      <p class="eyebrow contact__eyebrow">05 — Contacto</p>
-      <h2 id="contact-title" class="display contact__title" data-reveal="lines">
-        Hablemos de tu <em>próximo recuerdo</em>.
-      </h2>
-      <p class="lede" data-reveal="fade">Eventos, celebraciones familiares, retratos o contenido para redes.</p>
+      <p class="eyebrow contact__eyebrow">{ui.contact.eyebrow}</p>
+      <h2 id="contact-title" class="display contact__title" data-reveal="lines" set:html={ui.contact.title} />
+      <p class="lede" data-reveal="fade">{ui.contact.lede}</p>
 
       <div class="contact__actions" data-reveal="rise">
         <a class="btn btn--solid" href={c.whatsappUrl} target="_blank" rel="noopener" data-magnetic>
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4.5 19.5 5.6 16A7.8 7.8 0 1 1 8.3 18.6z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path><path d="M9.3 9.2c.2 2.3 2.2 4.4 4.6 4.8l.9-1.1 1.8.8c-.2 1.1-1.1 1.8-2.2 1.7-3.2-.3-6.2-3.3-6.4-6.5 0-1.1.6-2 1.7-2.2l.8 1.8z" fill="currentColor"></path></svg>
-          Escríbeme por WhatsApp
+          {ui.contact.whatsapp}
         </a>
         <a class="btn glass" href={`mailto:${c.email}`}>
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="2.5" stroke="currentColor" stroke-width="1.6"></rect><path d="m4.5 7 7.5 6 7.5-6" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path></svg>
-          Enviar un correo
+          {ui.contact.email}
         </a>
       </div>
 
       <dl class="contact__list" data-reveal="fade">
-        <div><dt class="meta">WhatsApp</dt><dd><a href={c.whatsappUrl} target="_blank" rel="noopener">{c.whatsappDisplay}</a></dd></div>
-        <div><dt class="meta">Correo</dt><dd><a href={`mailto:${c.email}`}>{c.email}</a></dd></div>
-        <div><dt class="meta">Instagram</dt><dd><a href={c.instagramUrl} target="_blank" rel="noopener">@{c.instagram}</a></dd></div>
-        <div><dt class="meta">Base</dt><dd>{profile.place}</dd></div>
+        <div><dt class="meta">{ui.contact.labels.whatsapp}</dt><dd><a href={c.whatsappUrl} target="_blank" rel="noopener">{c.whatsappDisplay}</a></dd></div>
+        <div><dt class="meta">{ui.contact.labels.email}</dt><dd><a href={`mailto:${c.email}`}>{c.email}</a></dd></div>
+        <div><dt class="meta">{ui.contact.labels.instagram}</dt><dd><a href={c.instagramUrl} target="_blank" rel="noopener">@{c.instagram}</a></dd></div>
+        <div><dt class="meta">{ui.contact.labels.base}</dt><dd>{profile.place}</dd></div>
       </dl>
     </div>
 
@@ -39,7 +42,7 @@ const c = profile.contact;
   </div>
 
   <footer class="footer wrap">
-    <a href="#inicio" class="footer__brand" aria-label="Volver al inicio"><Wordmark /></a>
+    <a href="#inicio" class="footer__brand" aria-label={ui.contact.top}><Wordmark /></a>
     <p>© {new Date().getFullYear()} {profile.name} · {profile.role}</p>
   </footer>
 </section>

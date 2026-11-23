@@ -19,6 +19,7 @@ export function initNav() {
   const railCurrent = document.querySelector<HTMLElement>('[data-rail-current]');
   const railTotal = document.querySelector<HTMLElement>('[data-rail-total]');
   const navLinks = [...document.querySelectorAll<HTMLAnchorElement>('[data-nav-link]')];
+  const langSwitch = document.querySelector<HTMLAnchorElement>('[data-lang-switch]');
 
   const chapters = [...document.querySelectorAll<HTMLElement>('[data-chapter]')];
   const zoned = [...document.querySelectorAll<HTMLElement>('section[data-atmos]')];
@@ -58,6 +59,8 @@ export function initNav() {
       const idx = chapters.indexOf(current);
       railLinks.forEach((a, i) => (i === idx ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current')));
       if (railCurrent) railCurrent.textContent = String(idx + 1).padStart(2, '0');
+      // el cambio de idioma conserva la sección en la que está la persona
+      if (langSwitch) langSwitch.href = langSwitch.dataset.langSwitch + (activeId === 'inicio' ? '' : `#${activeId}`);
       for (const link of navLinks) {
         const group = NAV_GROUPS[link.getAttribute('href') || ''] || [];
         if (group.includes(activeId)) link.setAttribute('aria-current', 'true');
@@ -105,7 +108,7 @@ function initMenu(html: HTMLElement) {
   const set = (open: boolean) => {
     menu.hidden = !open;
     toggle.setAttribute('aria-expanded', String(open));
-    if (label) label.textContent = open ? 'Cerrar' : 'Menú';
+    if (label) label.textContent = (open ? toggle.dataset.labelClose : toggle.dataset.labelOpen) || '';
     html.classList.toggle('is-locked', open);
     if (open) menu.querySelector<HTMLAnchorElement>('a')?.focus();
   };

@@ -1,11 +1,17 @@
 ---
 import Photo from '../ui/Photo.astro';
 import ChibiLine from '../ui/ChibiLine.astro';
-import { P } from '../../data/photos';
-import { profile } from '../../data/profile';
+import { getPhotos } from '../../data/photos';
+import { getProfile } from '../../data/profile';
+import { getLang, t } from '../../i18n';
+
+const lang = getLang(Astro.currentLocale);
+const ui = t(lang);
+const P = getPhotos(lang);
+const profile = getProfile(lang);
 ---
 
-<section id="sobre" class="about" data-atmos="day" data-chapter="Sobre mí" aria-labelledby="about-title">
+<section id="sobre" class="about" data-atmos="day" data-chapter={ui.chapters.sobre} aria-labelledby="about-title">
   <div class="wrap about__grid">
     <div class="about__media">
       <div class="about__sticky">
@@ -14,7 +20,7 @@ import { profile } from '../../data/profile';
           photo={P.retrato}
           sizes="(min-width: 1024px) 34vw, 88vw"
           widths={[480, 720, 960, 1280]}
-          caption="Menelik Puerta · Páramo, 2025"
+          caption={ui.about.portrait}
         />
         <div class="about__chibi" aria-hidden="true">
           <ChibiLine />
@@ -23,10 +29,8 @@ import { profile } from '../../data/profile';
     </div>
 
     <div class="about__body">
-      <p class="eyebrow about__eyebrow">01 — Sobre mí</p>
-      <h2 id="about-title" class="display h2" data-reveal="lines">
-        Imágenes que <em>conservan</em> lo importante.
-      </h2>
+      <p class="eyebrow about__eyebrow">{ui.about.eyebrow}</p>
+      <h2 id="about-title" class="display h2" data-reveal="lines" set:html={ui.about.title} />
 
       <p class="about__bio" data-reveal="scrub-words">{profile.bio.join(' ')}</p>
       <p class="prose about__craft" data-reveal="fade">{profile.craft}</p>
@@ -42,12 +46,12 @@ import { profile } from '../../data/profile';
         }
       </dl>
 
-      <div class="archive" aria-label="Archivo personal">
-        <p class="meta archive__title" data-reveal="fade">Desde 2017 detrás de la cámara</p>
+      <div class="archive" aria-label={ui.about.archive}>
+        <p class="meta archive__title" data-reveal="fade">{ui.about.archiveTitle}</p>
         <div class="archive__prints">
           <Photo class="archive__print archive__print--1" photo={P.orquideorama} sizes="(min-width: 1024px) 14vw, 38vw" widths={[320, 480, 720]} caption={true} lightbox="archivo" depth={0.35} />
           <Photo class="archive__print archive__print--2" photo={P.piedad} sizes="(min-width: 1024px) 13vw, 34vw" widths={[320, 480, 720]} caption={true} lightbox="archivo" depth={0.7} />
-          <Photo class="archive__print archive__print--3" photo={P.gata} sizes="(min-width: 1024px) 12vw, 32vw" widths={[320, 480, 720]} caption="En casa · 2026" lightbox="archivo" depth={0.15} />
+          <Photo class="archive__print archive__print--3" photo={P.gata} sizes="(min-width: 1024px) 12vw, 32vw" widths={[320, 480, 720]} caption={ui.about.sunny} lightbox="archivo" depth={0.15} />
         </div>
       </div>
     </div>

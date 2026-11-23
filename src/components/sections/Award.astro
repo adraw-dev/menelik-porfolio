@@ -1,22 +1,25 @@
 ---
 // Puente hacia lo audiovisual: la fotografía premiada (3.er puesto, Itagüí 2020).
 import Photo from '../ui/Photo.astro';
-import { P } from '../../data/photos';
+import { getPhotos } from '../../data/photos';
+import { getLang, t } from '../../i18n';
+
+const lang = getLang(Astro.currentLocale);
+const ui = t(lang);
+const P = getPhotos(lang);
 ---
 
-<section id="premio" class="award on-dark" data-atmos="night" data-chapter="Premio" aria-labelledby="award-title" data-award>
+<section id="premio" class="award on-dark" data-atmos="night" data-chapter={ui.chapters.premio} aria-labelledby="award-title" data-award>
   <div class="award__glow" aria-hidden="true" data-award-glow></div>
   <div class="wrap award__grid">
     <div class="award__photo">
-      <Photo photo={P.premio} lightbox="premio" sizes="(min-width: 1024px) 26vw, 72vw" widths={[420, 640, 841]} caption="Fotografía premiada · 2020" />
+      <Photo photo={P.premio} lightbox="premio" sizes="(min-width: 1024px) 26vw, 72vw" widths={[420, 640, 841]} caption={ui.award.caption} />
     </div>
     <div class="award__text">
-      <p class="eyebrow award__eyebrow" data-reveal="fade">Reconocimiento</p>
-      <h2 id="award-title" class="display award__title" data-reveal="lines">3.<sup>er</sup> puesto</h2>
-      <p class="lede" data-reveal="fade">Festival Municipal de Fotografía de Itagüí, 2020.</p>
-      <p class="prose award__note" data-reveal="fade">
-        Una noche de lluvia, un reflector encendido y una sola persona en la cancha.
-      </p>
+      <p class="eyebrow award__eyebrow" data-reveal="fade">{ui.award.eyebrow}</p>
+      <h2 id="award-title" class="display award__title" data-reveal="lines" set:html={ui.award.title} />
+      <p class="lede" data-reveal="fade">{ui.award.lede}</p>
+      <p class="prose award__note" data-reveal="fade">{ui.award.note}</p>
     </div>
   </div>
 </section>

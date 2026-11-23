@@ -1,16 +1,22 @@
 ---
 import { Image } from 'astro:assets';
-import { services, process, profile } from '../../data/profile';
-import { P } from '../../data/photos';
+import { getServices, getProcess, getProfile } from '../../data/profile';
+import { getPhotos, type PhotoKey } from '../../data/photos';
+import { getLang, t } from '../../i18n';
 
-const byFile = Object.fromEntries(Object.values(P).map((p) => [p.file, p]));
+const lang = getLang(Astro.currentLocale);
+const ui = t(lang);
+const services = getServices(lang);
+const process = getProcess(lang);
+const profile = getProfile(lang);
+const P = getPhotos(lang);
 ---
 
-<section id="servicios" class="services" data-atmos="dawn" data-chapter="Servicios" aria-labelledby="services-title">
+<section id="servicios" class="services" data-atmos="dawn" data-chapter={ui.chapters.servicios} aria-labelledby="services-title">
   <div class="wrap">
     <div class="services__head">
-      <p class="eyebrow services__eyebrow">04 — Servicios</p>
-      <h2 id="services-title" class="display h2" data-reveal="lines">Qué <em>hago</em></h2>
+      <p class="eyebrow services__eyebrow">{ui.services.eyebrow}</p>
+      <h2 id="services-title" class="display h2" data-reveal="lines" set:html={ui.services.title} />
     </div>
 
     <ol class="svc" role="list" data-svc>
@@ -29,14 +35,14 @@ const byFile = Object.fromEntries(Object.values(P).map((p) => [p.file, p]));
       {
         services.map((s, i) =>
           s.photo ? (
-            <Image src={byFile[s.photo].src} alt="" widths={[360, 540]} width={540} sizes="270px" class="svc-preview__img" data-svc-img={i} loading="lazy" />
+            <Image src={P[s.photo as PhotoKey].src} alt="" widths={[360, 540]} width={540} sizes="270px" class="svc-preview__img" data-svc-img={i} loading="lazy" />
           ) : null,
         )
       }
     </div>
 
     <div class="process">
-      <h3 class="meta process__title" data-reveal="fade">Cómo trabajo · acompañamiento completo</h3>
+      <h3 class="meta process__title" data-reveal="fade">{ui.services.process}</h3>
       <ol class="process__steps" role="list" data-process>
         <span class="process__line" aria-hidden="true"><i data-process-line></i></span>
         {
@@ -50,8 +56,8 @@ const byFile = Object.fromEntries(Object.values(P).map((p) => [p.file, p]));
         }
       </ol>
       <p class="tools" data-reveal="fade">
-        <span class="meta">Herramientas</span>
-        {profile.tools.map((t) => <span class="chip glass">{t}</span>)}
+        <span class="meta">{ui.services.tools}</span>
+        {profile.tools.map((tool) => <span class="chip glass">{tool}</span>)}
       </p>
     </div>
   </div>
