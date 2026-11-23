@@ -14,6 +14,8 @@ export function initNav() {
   initMenu(html);
 
   const bar = document.querySelector<HTMLElement>('[data-progress-bar]');
+  const header = document.querySelector<HTMLElement>('[data-nav]');
+  let scrolled: boolean | null = null;
   const rail = document.querySelector<HTMLElement>('[data-rail]');
   const railList = document.querySelector<HTMLElement>('[data-rail-list]');
   const railCurrent = document.querySelector<HTMLElement>('[data-rail-current]');
@@ -47,6 +49,13 @@ export function initNav() {
     const vh = innerHeight;
     const max = document.documentElement.scrollHeight - vh;
     if (bar) bar.style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`;
+
+    // barra transparente en la parte superior; de vidrio en cuanto se baja
+    const s = scrollY > 12;
+    if (s !== scrolled) {
+      scrolled = s;
+      header?.classList.toggle('is-scrolled', s);
+    }
 
     // capítulo que cruza el centro de la pantalla
     let current = chapters[0];
@@ -110,6 +119,7 @@ function initMenu(html: HTMLElement) {
     toggle.setAttribute('aria-expanded', String(open));
     if (label) label.textContent = (open ? toggle.dataset.labelClose : toggle.dataset.labelOpen) || '';
     html.classList.toggle('is-locked', open);
+    html.classList.toggle('menu-open', open);
     if (open) menu.querySelector<HTMLAnchorElement>('a')?.focus();
   };
 

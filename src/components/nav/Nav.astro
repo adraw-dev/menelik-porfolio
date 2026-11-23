@@ -82,6 +82,131 @@ const links = ids.map((id) => ({ href: `#${id}`, label: ui.nav.links[id] }));
     pointer-events: auto;
   }
 
+  /* Fondo de barra completa (móvil): transparente arriba, vidrio al hacer scroll.
+     La capa de vidrio NO anima su opacidad (Chrome/Safari recortan el blur mientras
+     una capa con backdrop-filter está semitransparente): se animan el tinte y el
+     propio desenfoque, de 0 a 20 px. Se extiende por encima del viewport para que
+     el rebote de iOS o la barra del navegador no dejen asomar una franja sin blur. */
+  .nav::before {
+    content: '';
+    position: absolute;
+    inset: -120px 0 0;
+    z-index: -1;
+    background-color: rgb(246 250 252 / 0);
+    border-bottom: 1px solid rgb(255 255 255 / 0);
+    box-shadow: 0 10px 30px -18px rgb(19 35 44 / 0);
+    -webkit-backdrop-filter: blur(0px) saturate(100%);
+    backdrop-filter: blur(0px) saturate(100%);
+    transition:
+      background-color var(--dur-slow) var(--ease-out),
+      border-color var(--dur-slow) var(--ease-out),
+      box-shadow var(--dur-slow) var(--ease-out),
+      -webkit-backdrop-filter var(--dur-slow) var(--ease-out),
+      backdrop-filter var(--dur-slow) var(--ease-out);
+    pointer-events: none;
+  }
+
+  /* en escritorio no hay barra completa: la capa no existe */
+  @media (min-width: 900px) {
+    .nav::before {
+      display: none;
+    }
+  }
+
+  @media (max-width: 899px) {
+    .nav {
+      pointer-events: auto;
+    }
+    /* capa propia en el compositor: evita repintados y parpadeos del blur al hacer scroll */
+    .nav {
+      transform: translateZ(0);
+    }
+    .nav.is-scrolled::before {
+      background-color: rgb(246 250 252 / 0.8);
+      border-bottom-color: rgb(255 255 255 / 0.7);
+      box-shadow: 0 10px 30px -18px rgb(19 35 44 / 0.35);
+      -webkit-backdrop-filter: blur(20px) saturate(170%);
+      backdrop-filter: blur(20px) saturate(170%);
+    }
+    :global(html[data-zone='dark']) .nav.is-scrolled::before {
+      background-color: rgb(24 43 53 / 0.74);
+      border-bottom-color: rgb(169 220 247 / 0.16);
+      box-shadow: 0 10px 30px -18px rgb(0 0 0 / 0.6);
+    }
+    /* Botones en móvil: la barra es la única superficie de vidrio.
+       "Menú" es una píldora sólida (mismo lenguaje que "Hablemos" en escritorio)
+       y el cambio de idioma es texto limpio. */
+    .nav .nav__lang,
+    .nav .nav__toggle {
+      border: 0;
+      box-shadow: none;
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+    .nav .nav__lang::before,
+    .nav .nav__toggle::before {
+      content: none;
+    }
+    .nav .nav__lang {
+      --glass-fill: transparent;
+      min-width: 40px;
+      padding: 0 0.4rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      opacity: 0.78;
+      transition: opacity var(--dur-base) var(--ease-out);
+    }
+    .nav .nav__lang:hover,
+    .nav .nav__lang:focus-visible {
+      opacity: 1;
+    }
+    .nav .nav__toggle {
+      --glass-fill: var(--tinta);
+      color: var(--crema);
+      padding: 0 1.05rem;
+      transition: background-color var(--dur-slow) var(--ease-out), color var(--dur-slow) var(--ease-out), transform var(--dur-base) var(--ease-out);
+    }
+    .nav .nav__toggle:active {
+      transform: scale(0.96);
+    }
+    :global(html[data-zone='dark']) .nav .nav__lang {
+      --glass-fill: transparent;
+    }
+    :global(html[data-zone='dark']) .nav .nav__toggle {
+      --glass-fill: var(--celeste-500);
+      color: var(--profundo-950);
+    }
+    /* con el menú abierto, la barra se funde con el panel oscuro */
+    :global(html.menu-open) .nav {
+      color: var(--crema);
+    }
+    :global(html.menu-open) .nav.is-scrolled::before {
+      background-color: transparent;
+      border-bottom-color: transparent;
+      box-shadow: none;
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+    .nav .nav__toggle[aria-expanded='true'] {
+      --glass-fill: var(--celeste-500);
+      color: var(--profundo-950);
+    }
+  }
+
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .nav.is-scrolled::before { background-color: rgb(246 250 252 / 0.95); }
+    :global(html[data-zone='dark']) .nav.is-scrolled::before { background-color: rgb(24 43 53 / 0.95); }
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    .nav.is-scrolled::before {
+      background-color: var(--niebla-50);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+    :global(html[data-zone='dark']) .nav.is-scrolled::before { background-color: var(--profundo-900); }
+  }
+
   :global(html[data-zone='dark']) .nav {
     color: var(--crema);
   }
